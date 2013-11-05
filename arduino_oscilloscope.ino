@@ -33,25 +33,7 @@ void readAnalogIn() {
   Serial.write(byte2);
 }
 
-void handlePulses() {
-  cyclePosition = (millis() % period);
-
-  if (cyclePosition < triggerDuration) {
-    digitalWrite(triggerOut, triggerVoltageOn);
-    digitalWrite(gateOut, gateVoltageOn);
-  }
-   else {
-    if (cyclePosition >= triggerDuration) {
-      digitalWrite(triggerOut, triggerVoltageOff);
-    }
-    if (cyclePosition >= gateDuration) {
-      digitalWrite(gateOut, gateVoltageOff);
-    }
-  }
-}
-
 void loop() {
-  handlePulses();
   readAnalogIn();
 }
 
