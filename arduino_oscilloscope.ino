@@ -1,8 +1,11 @@
+#ifndef CHAR_BIT
+  #define CHAR_BIT 8
+#endif
+
 const int analogIn = 0;
 const int gateOut = 10;
 const int triggerOut = 11;
 
-const int CHAR_BIT = 8; // not defined otherwise?
 const char beginHeader = 0xff;
 const int serialBaudRate = 28800;
 const int period = 2000;
@@ -37,7 +40,7 @@ void handlePulses() {
     digitalWrite(triggerOut, triggerVoltageOn);
     digitalWrite(gateOut, gateVoltageOn);
   }
-   else { 
+   else {
     if (cyclePosition >= triggerDuration) {
       digitalWrite(triggerOut, triggerVoltageOff);
     }
