@@ -11,8 +11,8 @@ class RenderArea : public QWidget {
 
 public:
   RenderArea(QWidget *parent = 0);
-  QSize minimumSizeHint() const;
-  QSize sizeHint() const;
+  QSize minimumSizeHint(void) const;
+  QSize sizeHint(void) const;
 
 protected:
   void paintEvent(QPaintEvent *event);

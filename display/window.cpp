@@ -4,7 +4,7 @@
 
 const int IdRole = Qt::UserRole;
 
-Window::Window() {
+Window::Window(void) {
   renderArea = new RenderArea;
   QGridLayout *mainLayout = new QGridLayout;
   mainLayout->setColumnStretch(0, 1);

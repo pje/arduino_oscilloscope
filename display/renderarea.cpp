@@ -7,11 +7,11 @@ RenderArea::RenderArea(QWidget *parent) : QWidget(parent) {
   pen = QPen(Qt::blue, 2);
 }
 
-QSize RenderArea::minimumSizeHint() const {
+QSize RenderArea::minimumSizeHint(void) const {
   return QSize(100, 100);
 }
 
-QSize RenderArea::sizeHint() const {
+QSize RenderArea::sizeHint(void) const {
   return QSize(400, 200);
 }
 

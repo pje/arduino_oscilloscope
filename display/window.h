@@ -9,7 +9,7 @@ class Window : public QWidget {
   Q_OBJECT
 
 public:
-  Window();
+  Window(void);
 
 private:
   RenderArea *renderArea;
