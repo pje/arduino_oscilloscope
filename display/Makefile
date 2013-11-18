@@ -2,7 +2,7 @@ NAME=display
 SRC_FILES=main.cpp renderarea.cpp renderarea.h window.cpp window.h
 
 $(NAME).pro: $(SRC_FILES)
-	qmake -project TEMPLATE=app TARGET=$(NAME) -Wall
+	qmake -project TEMPLATE=app CONFIG+=static TARGET=$(NAME) -Wall
 
 Makefile.generated: $(NAME).pro
 	qmake -makefile -o Makefile.generated -Wall
@@ -17,6 +17,9 @@ clean:
 	rm -rf Makefile.generated
 	rm -rf $(NAME).pro
 	rm -rf $(NAME).app
+
+run:
+	./$(NAME).app/Contents/MacOS/display
 
 .PHONY: clean
 .DEFAULT: $(NAME).app
