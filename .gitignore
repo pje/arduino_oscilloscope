@@ -1,3 +1,6 @@
-*/*.o
-*/moc_*.cpp
+display/*.o
+display/moc_*.cpp
+display/*.app
+display/*.pro
+display/Makefile.generated
 
