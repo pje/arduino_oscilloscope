@@ -1,11 +1,12 @@
 NAME=display
-SRC_FILES=main.cpp renderarea.cpp renderarea.h window.cpp window.h
+SOURCES=main.cpp renderarea.cpp ring_buffer.c window.cpp
+HEADERS=renderarea.h ring_buffer.h window.h
 
-$(NAME).pro: $(SRC_FILES)
-	qmake -project TEMPLATE=app CONFIG+=static TARGET=$(NAME) -Wall
+$(NAME).pro: $(SOURCES) $(HEADERS)
+	qmake -project -nopwd -Wall "TEMPLATE=app" "CONFIG+=static" "TARGET=$(NAME)" $(SOURCES) $(HEADERS)
 
 Makefile.generated: $(NAME).pro
-	qmake -makefile -o Makefile.generated -Wall
+	qmake -makefile -Wall -o Makefile.generated
 
 $(NAME).app: Makefile.generated
 	$(MAKE) -f Makefile.generated
@@ -21,7 +22,7 @@ clean:
 run:
 	open $(NAME).app
 
-.PHONY: clean
+.PHONY: clean run
 .DEFAULT: $(NAME).app
 
 ring_buffer_test:
