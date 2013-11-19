@@ -18,7 +18,6 @@ RenderArea::RenderArea(QWidget *parent) : QWidget(parent) {
   for (int i = 0; i < numSamples; i++) {
     samples[i] = i / (double)numSamples;
   }
-  // void *memcpy(void *destination, const void *source, size_t num);
   memcpy(samples + 200, samples, 200 * sizeof(double));
 }
 
