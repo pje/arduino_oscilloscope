@@ -1,8 +1,8 @@
+#include <stdio.h>
+#include <stddef.h>
 #include <stdlib.h>
 #include <string.h>
-#include <stddef.h>
 #include "ring_buffer.h"
-#include <stdio.h>
 
 RingBuffer *ring_buffer_init(const size_t size) {
   TYPE *elements = malloc(size);
