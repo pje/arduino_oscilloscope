@@ -1,10 +1,25 @@
-#include <QtGui>
+#include <QApplication>
+#include <QColor>
+#include <QPainter>
+#include <QPaintEvent>
+#include <QPalette>
+#include <QPen>
+#include <QPoint>
+#include <QSize>
+#include <QWidget>
+
 #include "renderarea.h"
+#include "ring_buffer.h"
 
 RenderArea::RenderArea(QWidget *parent) : QWidget(parent) {
-  setBackgroundRole(QPalette::Base);
   setAutoFillBackground(true);
-  pen = QPen(Qt::blue, 2);
+  pen = new QPen(QColor(10,10,10), 1);
+  samples = (double*) malloc(sizeof(double) * numSamples);
+  for (int i = 0; i < numSamples; i++) {
+    samples[i] = i / (double)numSamples;
+  }
+  // void *memcpy(void *destination, const void *source, size_t num);
+  memcpy(samples + 200, samples, 200 * sizeof(double));
 }
 
 QSize RenderArea::minimumSizeHint(void) const {
@@ -16,15 +31,19 @@ QSize RenderArea::sizeHint(void) const {
 }
 
 void RenderArea::paintEvent(QPaintEvent *event) {
+  // #!/usr/bin/env ruby
+  // (0..1000).select{ |i| i % 6 == 0 }.map { |i| i / 1000.0 }.*(3).first(400)
+
+  QPoint points[numSamples];
+  int displayHeightPixels = this->sizeHint().height();
+
+  for (int i = 0; i < numSamples; i++) {
+    points[i] = QPoint(i, (displayHeightPixels * samples[i]));
+  }
+
   QWidget::paintEvent(event);
-  static const QPoint points[4] = {
-    QPoint(10, 10),
-    QPoint(20, 20),
-    QPoint(25, 25),
-    QPoint(15, 15)
-  };
   QPainter painter(this);
   painter.setRenderHint(QPainter::Antialiasing, true);
-  painter.setPen(pen);
-  painter.drawPolyline(points, 4);
+  painter.setPen(*(this->pen));
+  painter.drawPolyline(points, numSamples);
 }

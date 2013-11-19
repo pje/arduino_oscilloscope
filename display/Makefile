@@ -23,3 +23,6 @@ run:
 
 .PHONY: clean
 .DEFAULT: $(NAME).app
+
+ring_buffer_test:
+	gcc -Wall ring_buffer.c ring_buffer_test.c -o ring_buffer_test
