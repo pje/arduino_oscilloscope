@@ -6,14 +6,13 @@
 typedef struct RingBuffer {
   TYPE *elements;
   size_t size;
-  long head_index;
+  size_t head_index;
 } RingBuffer;
 
-RingBuffer *ring_buffer_init(const size_t size);
-void ring_buffer_free(RingBuffer * const buffer);
-TYPE ring_buffer_get(RingBuffer * const buffer, const long index);
-void ring_buffer_set(RingBuffer * const buffer, const TYPE element, const long index);
-void ring_buffer_push(RingBuffer * const buffer, const TYPE element);
-TYPE *_copy(const TYPE e);
+RingBuffer *ring_buffer_init(size_t size);
+void ring_buffer_free(RingBuffer *buffer);
+TYPE ring_buffer_pop(RingBuffer *buffer);
+void ring_buffer_push(RingBuffer *buffer, TYPE element);
+void ring_buffer_inspect(const RingBuffer *buffer);
 
 #endif

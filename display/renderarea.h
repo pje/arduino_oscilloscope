@@ -5,13 +5,15 @@
 
 class QPen;
 
+struct RingBuffer;
+
 class RenderArea : public QWidget {
   Q_OBJECT
 
 public:
   const static int numSamples = 400;
   QPoint *points;
-  double *samples;
+  RingBuffer *ring_buffer;
   RenderArea(QWidget *parent = 0);
   QSize minimumSizeHint(void) const;
   QSize sizeHint(void) const;

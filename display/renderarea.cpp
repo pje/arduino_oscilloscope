@@ -7,18 +7,18 @@
 #include <QPoint>
 #include <QSize>
 #include <QWidget>
-
+#include <math.h>
 #include "renderarea.h"
+#include <iostream>
+
+extern "C" {
 #include "ring_buffer.h"
+}
 
 RenderArea::RenderArea(QWidget *parent) : QWidget(parent) {
   setAutoFillBackground(true);
   pen = new QPen(QColor(10,10,10), 1);
-  samples = (double*) malloc(sizeof(double) * numSamples);
-  for (int i = 0; i < numSamples; i++) {
-    samples[i] = i / (double)numSamples;
-  }
-  memcpy(samples + 200, samples, 200 * sizeof(double));
+
 }
 
 QSize RenderArea::minimumSizeHint(void) const {
@@ -30,14 +30,20 @@ QSize RenderArea::sizeHint(void) const {
 }
 
 void RenderArea::paintEvent(QPaintEvent *event) {
-  // #!/usr/bin/env ruby
-  // (0..1000).select{ |i| i % 6 == 0 }.map { |i| i / 1000.0 }.*(3).first(400)
+  std::cout << "ja" << std::endl;
+  RingBuffer *ring_buffer = ring_buffer_init(numSamples);
+
+  for (int i = 0; i < numSamples; i++) {
+    double sample = sin(i / (double)numSamples);
+
+    ring_buffer_push(ring_buffer, sample);
+  }
 
   QPoint points[numSamples];
   int displayHeightPixels = this->sizeHint().height();
 
   for (int i = 0; i < numSamples; i++) {
-    points[i] = QPoint(i, (displayHeightPixels * samples[i]));
+    points[i] = QPoint(i, (displayHeightPixels * ring_buffer_get(ring_buffer, i)));
   }
 
   QWidget::paintEvent(event);
@@ -45,4 +51,7 @@ void RenderArea::paintEvent(QPaintEvent *event) {
   painter.setRenderHint(QPainter::Antialiasing, true);
   painter.setPen(*(this->pen));
   painter.drawPolyline(points, numSamples);
+
+  std::cout << "jawohl" << std::endl;
+  ring_buffer_free(ring_buffer);
 }
