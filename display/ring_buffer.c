@@ -13,12 +13,12 @@ RingBuffer *ring_buffer_init(const size_t size) {
   return(rb);
 }
 
-void ring_buffer_free(RingBuffer *buffer) {
+void ring_buffer_free(RingBuffer * const buffer) {
   free(buffer->elements);
   free(buffer);
 }
 
-TYPE ring_buffer_get(RingBuffer * const buffer, const int index) {
+TYPE ring_buffer_get(RingBuffer * const buffer, const long index) {
   return((buffer->elements[(buffer->head_index - index) % buffer->size]));
 }
 
