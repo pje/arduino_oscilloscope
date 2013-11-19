@@ -19,7 +19,7 @@ clean:
 	rm -rf $(NAME).app
 
 run:
-	./$(NAME).app/Contents/MacOS/display
+	open $(NAME).app
 
 .PHONY: clean
 .DEFAULT: $(NAME).app
