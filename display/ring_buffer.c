@@ -18,21 +18,21 @@ void ring_buffer_free(RingBuffer *buffer) {
   free(buffer);
 }
 
-TYPE ring_buffer_get(const RingBuffer *buffer, const int index) {
+TYPE ring_buffer_get(RingBuffer * const buffer, const int index) {
   return((buffer->elements[(buffer->head_index - index) % buffer->size]));
 }
 
-void ring_buffer_push(RingBuffer *buffer, const TYPE element) {
+void ring_buffer_push(RingBuffer * const buffer, const TYPE element) {
   ring_buffer_set(buffer, element, 0);
 }
 
-void ring_buffer_set(RingBuffer *buffer, const TYPE element, const long index) {
+void ring_buffer_set(RingBuffer * const buffer, const TYPE element, const long index) {
   TYPE* element_copy = _copy(element);
   buffer->elements[((buffer->head_index + 1) % buffer->size)] = *element_copy;
   buffer->head_index = ((buffer->head_index + 1) % buffer->size);
 }
 
-TYPE *_copy(TYPE e) {
+TYPE *_copy(const TYPE e) {
   TYPE *element_copy = malloc(sizeof(TYPE));
   memcpy(element_copy, &e, sizeof(TYPE));
   return(element_copy);
