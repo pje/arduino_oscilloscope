@@ -1,6 +1,6 @@
 NAME=display
-SOURCES=main.cpp renderarea.cpp ring_buffer.c window.cpp
-HEADERS=renderarea.h ring_buffer.h window.h
+SOURCES=main.cpp renderarea.cpp ring_buffer.c window.cpp sample_producer.c
+HEADERS=renderarea.h ring_buffer.h window.h sample_producer.h
 
 $(NAME).pro: $(SOURCES) $(HEADERS)
 	qmake -project -nopwd -Wall "TEMPLATE=app" "CONFIG+=static" "TARGET=$(NAME)" $(SOURCES) $(HEADERS)

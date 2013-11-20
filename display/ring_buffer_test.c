@@ -20,6 +20,8 @@ int main(int argc, char *argv[]) {
   assert(fabs(ring_buffer_pop(buffer) - 0.4) < EPSILON);
   assert(fabs(ring_buffer_pop(buffer) - 0.3) < EPSILON);
 
+  ring_buffer_inspect(ring_buffer);
+
   printf("success!\n");
 
   // valgrind test: should exhibit constant memory usage (no leaks)

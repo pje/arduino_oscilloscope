@@ -24,6 +24,10 @@ TYPE ring_buffer_pop(RingBuffer *buffer) {
   return element;
 }
 
+TYPE ring_buffer_get(const RingBuffer *buffer, size_t index) {
+  return buffer->elements[(buffer->head_index + index) % buffer->size];
+}
+
 void ring_buffer_push(RingBuffer *buffer, TYPE element) {
   buffer->head_index = buffer->head_index == 0 ? buffer->size - 1 : buffer->head_index - 1;
   buffer->elements[buffer->head_index % buffer->size] = element;
@@ -31,7 +35,7 @@ void ring_buffer_push(RingBuffer *buffer, TYPE element) {
 
 void ring_buffer_inspect(const RingBuffer *buffer) {
   printf("{ ");
-  for (int i = 0; i < buffer->size; i++) {
+  for (size_t i = 0; i < buffer->size; i++) {
     printf("%f, ", buffer->elements[i]);
   }
   printf(" }\n");

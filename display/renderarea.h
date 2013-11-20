@@ -11,7 +11,8 @@ class RenderArea : public QWidget {
   Q_OBJECT
 
 public:
-  const static int numSamples = 400;
+  const static size_t numSamples = 1000;
+  const static size_t default_window_size = 1000;
   QPoint *points;
   RingBuffer *ring_buffer;
   RenderArea(QWidget *parent = 0);
@@ -20,7 +21,8 @@ public:
   size_t time;
 
 public slots:
-    void on_timer_timeout();
+  void on_redraw_timer_timeout();
+  void on_consume_timer_timeout();
 
 protected:
   void paintEvent(QPaintEvent *event);
