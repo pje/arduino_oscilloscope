@@ -58,5 +58,6 @@ void RenderArea::paintEvent(QPaintEvent *event) {
   painter.setPen(*(this->pen));
   painter.drawPolyline(points, numSamples);
 
+  free(points);
   ring_buffer_free(ring_buffer);
 }
