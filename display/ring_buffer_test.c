@@ -23,5 +23,18 @@ int main(int argc, char *argv[]) {
 
   printf("success!\n");
 
+  // valgrind test: should exhibit constant memory usage (no leaks)
+  //
+  // while(1) {
+  //   size_t size = 1000;
+  //   RingBuffer *buffer = ring_buffer_init(size);
+  //   for (int i = 0; i < size; i++) {
+  //     ring_buffer_push(buffer, (i / (double)size));
+  //   }
+  //   for (int i = 0; i < size; i++) {
+  //     ring_buffer_pop(buffer);
+  //   }
+  //   ring_buffer_free(buffer);
+  // }
   return(0);
 }
