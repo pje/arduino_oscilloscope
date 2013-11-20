@@ -3,4 +3,4 @@ display/moc_*.cpp
 display/*.app
 display/*.pro
 display/Makefile.generated
-
+display/ring_buffer_test
