@@ -1,7 +1,8 @@
 #include <stdio.h>
 #include <math.h>
-#include "ring_buffer.h"
 #include <assert.h>
+#include "ring_buffer.h"
+
 
 #define EPSILON 0.00000000001
 
@@ -19,6 +20,8 @@ int main(int argc, char *argv[]) {
   assert(fabs(ring_buffer_pop(buffer) - 0.5) < EPSILON);
   assert(fabs(ring_buffer_pop(buffer) - 0.4) < EPSILON);
   assert(fabs(ring_buffer_pop(buffer) - 0.3) < EPSILON);
+
+  printf("success!\n");
 
   return(0);
 }
