@@ -3,7 +3,6 @@
 #include <assert.h>
 #include "ring_buffer.h"
 
-
 #define EPSILON 0.00000000001
 
 int main(int argc, char *argv[]) {
