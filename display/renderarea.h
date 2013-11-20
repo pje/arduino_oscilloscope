@@ -17,6 +17,10 @@ public:
   RenderArea(QWidget *parent = 0);
   QSize minimumSizeHint(void) const;
   QSize sizeHint(void) const;
+  size_t time;
+
+public slots:
+    void on_timer_timeout();
 
 protected:
   void paintEvent(QPaintEvent *event);

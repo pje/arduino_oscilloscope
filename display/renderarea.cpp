@@ -6,6 +6,7 @@
 #include <QPen>
 #include <QPoint>
 #include <QSize>
+#include <QTimer>
 #include <QWidget>
 #include <math.h>
 #include "renderarea.h"
@@ -18,6 +19,10 @@ extern "C" {
 RenderArea::RenderArea(QWidget *parent) : QWidget(parent) {
   setAutoFillBackground(true);
   pen = new QPen(QColor(10,10,10), 1);
+  this->time = 0;
+  QTimer *timer = new QTimer(this);
+  connect(timer, SIGNAL(timeout()), this, SLOT(on_timer_timeout()));
+  timer->start(10);
 }
 
 QSize RenderArea::minimumSizeHint(void) const {
@@ -28,10 +33,15 @@ QSize RenderArea::sizeHint(void) const {
   return QSize(400, 200);
 }
 
+void RenderArea::on_timer_timeout() {
+  (this->time)++;
+  this->update();
+}
+
 void RenderArea::paintEvent(QPaintEvent *event) {
   RingBuffer *ring_buffer = ring_buffer_init(numSamples);
   for (int i = 0; i < numSamples; i++) {
-    double sample = sin(i / (double)numSamples);
+    double sample = sin(i / ((double)numSamples + this->time));
     ring_buffer_push(ring_buffer, sample);
   }
 
