@@ -1,4 +1,4 @@
-#include <QtGui>
+#include <QGridLayout>
 #include "renderarea.h"
 #include "window.h"
 
