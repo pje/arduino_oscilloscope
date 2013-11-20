@@ -25,5 +25,5 @@ run:
 .PHONY: clean run
 .DEFAULT: $(NAME).app
 
-ring_buffer_test:
+ring_buffer_test: ring_buffer.c ring_buffer_test.c ring_buffer.h
 	gcc -Wall ring_buffer.c ring_buffer_test.c -o ring_buffer_test
