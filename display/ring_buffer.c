@@ -29,37 +29,16 @@ TYPE ring_buffer_get(const RingBuffer *buffer, size_t index) {
 }
 
 int ring_buffer_get_n(const RingBuffer *buffer, size_t amount_requested, TYPE* output_buffer) {
-  // { 1, 8, 4, 3, 6, 2, 7, 5 }
-  //               ^----head
-  //
-  // buffer->size: 8
-  // buffer->head_index: 4
-  // amount_requested: 7
-  //
-  // section_a =              { 6, 2, 7, 5 }
-  // section_b = { 1, 8, 4, 3 }
-  // return(section_a + section_b)
-  //
-  //
-  // section_a_num_elements = size - head_index;
-  // section_b_num_elements = (amount_requested > section_a_num_elements) ? head_index : 0;
-  //
-  // section_a = (head_index..size);
-  // section_b = (0..head_index);
-
   size_t section_a_num_elements = buffer->size - buffer->head_index;
   TYPE *section_a_start_address = buffer->elements + buffer->head_index;
-
   memcpy(output_buffer, section_a_start_address, sizeof(TYPE) * section_a_num_elements);
-
   if(amount_requested > section_a_num_elements) {
     size_t section_b_num_elements = buffer->head_index;
     TYPE *section_b_start_address = buffer->elements;
-
     memcpy(output_buffer, section_a_start_address, section_a_num_elements);
     memcpy(output_buffer + section_a_num_elements, section_b_start_address, sizeof(TYPE) * section_b_num_elements);
   }
-  return 0; // todo: return success/failure
+  return 0; // todo: return success/failure on memcpy failure
 }
 
 void ring_buffer_push(RingBuffer *buffer, TYPE element) {
