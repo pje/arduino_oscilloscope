@@ -56,7 +56,7 @@ void ring_buffer_inspect(const RingBuffer *buffer) {
 
 void _buffer_inspect(TYPE *buffer, size_t buffer_size) {
   printf("{ ");
-  for (int i = 0; i < buffer_size; i++) {
+  for (size_t i = 0; i < buffer_size; i++) {
     printf("%f, ", buffer[i]);
   }
   printf(" }\n");
