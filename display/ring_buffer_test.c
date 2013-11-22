@@ -15,12 +15,19 @@ int main(int argc, char *argv[]) {
   ring_buffer_push(buffer, 0.5);
   ring_buffer_push(buffer, 0.6);
 
+  assert(fabs(ring_buffer_get(buffer, 0) - 0.6) < EPSILON);
   assert(fabs(ring_buffer_pop(buffer) - 0.6) < EPSILON);
+
+  assert(fabs(ring_buffer_get(buffer, 0) - 0.5) < EPSILON);
   assert(fabs(ring_buffer_pop(buffer) - 0.5) < EPSILON);
+
+  assert(fabs(ring_buffer_get(buffer, 0) - 0.4) < EPSILON);
   assert(fabs(ring_buffer_pop(buffer) - 0.4) < EPSILON);
+
+  assert(fabs(ring_buffer_get(buffer, 0) - 0.3) < EPSILON);
   assert(fabs(ring_buffer_pop(buffer) - 0.3) < EPSILON);
 
-  ring_buffer_inspect(ring_buffer);
+  ring_buffer_inspect(buffer);
 
   printf("success!\n");
 
