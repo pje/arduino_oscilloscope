@@ -2,12 +2,8 @@
 #define CHAR_BIT 8
 #endif
 
-const float pi = 3.141592653;
 const int analogIn = 0;
 const int serialBaudRate = 9600;
-
-int i = 0;
-unsigned char j = '0';
 
 void setup() {
   Serial.begin(serialBaudRate);
