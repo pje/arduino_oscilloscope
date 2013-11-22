@@ -4,6 +4,7 @@
 struct RingBuffer;
 
 void *sample_producer_start(void *arg);
-void _fill_ring_buffer_with_sin_samples(struct RingBuffer *buffer, unsigned long cycle_offset);
+void sample_producer_print_bits(size_t size, const void *ptr);
+void sample_producer_error(char* msg);
 
 #endif

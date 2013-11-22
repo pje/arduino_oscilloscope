@@ -13,10 +13,11 @@ class RenderArea : public QWidget {
 public:
   RenderArea(QWidget *parent = 0);
   ~RenderArea();
-  const static size_t numSamples = 1000;
+  const static size_t samples_in_backlog = 6000;
+  const static size_t samples_per_second = 1200;
   const static size_t default_window_size = 1000;
   QPoint *points;
-  RingBuffer *ring_buffer;
+  RingBuffer *sample_backlog;
   QSize minimumSizeHint(void) const;
   QSize sizeHint(void) const;
 

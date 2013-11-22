@@ -1,6 +1,6 @@
 NAME=display
-SOURCES=main.cpp renderarea.cpp ring_buffer.c window.cpp sample_producer.c
-HEADERS=renderarea.h ring_buffer.h window.h sample_producer.h
+SOURCES=main.cpp renderarea.cpp ring_buffer.c window.cpp sample_producer.c arduino-serial-lib.c
+HEADERS=renderarea.h ring_buffer.h window.h sample_producer.h arduino-serial-lib.h
 
 $(NAME).pro: $(SOURCES) $(HEADERS)
 	qmake -project -nopwd -Wall "TEMPLATE=app" "CONFIG+=static" "TARGET=$(NAME)" $(SOURCES) $(HEADERS)

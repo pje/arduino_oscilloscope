@@ -20,11 +20,11 @@ extern "C" {
 RenderArea::RenderArea(QWidget *parent) : QWidget(parent) {
   setAutoFillBackground(true);
   pen = new QPen(QColor(10,10,10), 1);
-  this->ring_buffer = ring_buffer_init(numSamples);
-  this->points = (QPoint*) malloc(numSamples * sizeof(QPoint));
+  this->sample_backlog = ring_buffer_init(samples_in_backlog);
+  this->points = (QPoint*) malloc(samples_in_backlog * sizeof(QPoint));
 
   pthread_t *producer_thread = (pthread_t*) malloc(sizeof(pthread_t));
-  pthread_create(producer_thread, NULL, sample_producer_start, (void *) this->ring_buffer);
+  pthread_create(producer_thread, NULL, sample_producer_start, (void *) this->sample_backlog);
 
   QTimer *redraw_timer = new QTimer(this);
   connect(redraw_timer, SIGNAL(timeout()), this, SLOT(on_redraw_timer_timeout()));
@@ -32,7 +32,7 @@ RenderArea::RenderArea(QWidget *parent) : QWidget(parent) {
 }
 
 RenderArea::~RenderArea() {
-  ring_buffer_free(ring_buffer);
+  ring_buffer_free(sample_backlog);
   free(points);
 }
 
@@ -45,8 +45,8 @@ QSize RenderArea::sizeHint(void) const {
 }
 
 void RenderArea::on_redraw_timer_timeout() {
-  for (size_t i = 0; i < numSamples; i++) {
-    this->points[i] = QPoint(i, (this->sizeHint().height() * ring_buffer_get(ring_buffer, ((ring_buffer->size - i) % ring_buffer->size))));
+  for (size_t i = 0; i < samples_in_backlog; i++) {
+    this->points[i] = QPoint(i, (this->sizeHint().height() * ring_buffer_get(sample_backlog, ((sample_backlog->size - i) % sample_backlog->size))));
   }
   this->update();
 }
@@ -56,5 +56,5 @@ void RenderArea::paintEvent(QPaintEvent *event) {
   QPainter painter(this);
   painter.setRenderHint(QPainter::Antialiasing, true);
   painter.setPen(*(this->pen));
-  painter.drawPolyline(points, numSamples);
+  painter.drawPolyline(points, samples_in_backlog);
 }

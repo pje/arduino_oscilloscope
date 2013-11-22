@@ -21,18 +21,8 @@ void serialWriteVoltage( int voltage) {
 }
 
 void loop() {
-
-//  serialWriteVoltage(analogRead(analogIn));
-// <sin for testing>
-//  int degree = ++i;
-//  double rads = (((degree % 360) * pi) / 180.0); // (0..2pi)
-//  double sample = ((sin(rads) + 1.0) / 2.0);     // (0..1)
-//  int value = (unsigned int) (sample * 1024.0);
-//  Serial.println(value);
-//  serialWriteVoltage(value);
-// </sin>
-
-  serialWriteVoltage(++i % 1024);
-  delay(10);
+//  int voltage_value = analogRead(analogIn);
+  int voltage_value = millis() % 1024;
+  serialWriteVoltage(voltage_value);
 }
 
