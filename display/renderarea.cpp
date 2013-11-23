@@ -39,7 +39,7 @@ RenderArea::RenderArea(QWidget *parent) : QWidget(parent) {
   pthread_create(producer_thread, NULL, sample_producer_start, (void *) this->sample_backlog);
   this->redraw_timer = new QTimer(this);
   connect(redraw_timer, SIGNAL(timeout()), this, SLOT(on_redraw_timer_timeout()));
-  redraw_timer->start(30);
+  redraw_timer->start(30); // 33 1/3 redraws per second
 }
 
 RenderArea::~RenderArea() {
