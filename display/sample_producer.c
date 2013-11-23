@@ -23,7 +23,7 @@ void *sample_producer_start(void *arg) {
   // 6000                   = 10                 * 600
 
   const int max_sample_value = 1024;
-  const int sleep_micros = 2000;
+  const int sleep_micros = 1000; // 1 millisecond
   fd = serialport_init(serialport, baudrate);
   if (fd == -1) sample_producer_error("couldn't open port");
   const size_t num_raw_samples = 2;
