@@ -4,7 +4,8 @@
 #include <QWidget>
 
 class QPen;
-
+class QTimer;
+class QPoint;
 struct RingBuffer;
 
 class RenderArea : public QWidget {
@@ -13,15 +14,9 @@ class RenderArea : public QWidget {
 public:
   RenderArea(QWidget *parent = 0);
   ~RenderArea();
-  const static size_t samples_in_backlog = 6000;
-  const static size_t samples_per_second = 1200;
-  const static size_t default_window_size = 1000;
-
-  size_t num_samples_to_draw;
-  double *samples_drawable;
-
-  QPoint *points;
   RingBuffer *sample_backlog;
+  const static size_t samples_in_backlog = 1000;
+
   QSize minimumSizeHint(void) const;
   QSize sizeHint(void) const;
 
@@ -32,6 +27,9 @@ protected:
   void paintEvent(QPaintEvent *event);
 
 private:
+  QPoint *render_points;
+  pthread_t *producer_thread;
+  QTimer *redraw_timer;
   QPen *pen;
 };
 
