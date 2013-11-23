@@ -1,5 +1,6 @@
 display/*.o
 display/moc_*.cpp
+display/display
 display/*.app
 display/*.pro
 display/Makefile.generated
