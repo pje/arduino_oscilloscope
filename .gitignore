@@ -1,4 +1,6 @@
 display/*.o
+display/tmp/*
+display/vendor/*
 display/moc_*.cpp
 display/display
 display/*.app
