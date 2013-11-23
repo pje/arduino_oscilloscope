@@ -35,6 +35,7 @@ RenderArea::RenderArea(QWidget *parent) : QWidget(parent) {
 }
 
 RenderArea::~RenderArea() {
+  redraw_timer->stop();
   delete redraw_timer;
   delete pen;
   ring_buffer_free(sample_backlog);
