@@ -31,7 +31,7 @@ int main(int argc, char *argv[]) {
 
   ring_buffer_free(buffer);
 
-  RingBuffer *buffer2 = ring_buffer_init(4);
+  RingBuffer *buffer2 = ring_buffer_init(6);
 
   ring_buffer_push(buffer2, 0.1);
   ring_buffer_push(buffer2, 0.2);
@@ -39,11 +39,13 @@ int main(int argc, char *argv[]) {
   ring_buffer_push(buffer2, 0.4);
   ring_buffer_push(buffer2, 0.5);
   ring_buffer_push(buffer2, 0.6);
+  ring_buffer_push(buffer2, 0.7);
+  ring_buffer_push(buffer2, 0.8);
 
   const size_t output_buffer_size = 4;
   double *output_buffer = calloc(output_buffer_size, sizeof(double));
   ring_buffer_get_n(buffer2, output_buffer_size, output_buffer);
-  double expected_buffer[output_buffer_size] = { 0.6, 0.5, 0.4, 0.3 };
+  double expected_buffer[output_buffer_size] = { 0.8, 0.7, 0.6, 0.5 };
 
   for (int i = 0; i < output_buffer_size; i++) {
     assert(output_buffer[i] == expected_buffer[i]);
