@@ -7,3 +7,6 @@ display/*.app
 display/*.pro
 display/Makefile.generated
 display/ring_buffer_test
+display/.device.vars
+display/.qmake.vars
+display/config.tests/
