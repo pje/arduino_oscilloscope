@@ -10,7 +10,6 @@
 
 void *sample_producer_start(void *arg) {
   RingBuffer *buffer = (RingBuffer*) arg;
-
   int fd = -1;
   const char *serialport = "/dev/tty.usbserial-A600afNY";
   const int baudrate = 9600;
@@ -39,7 +38,9 @@ void *sample_producer_start(void *arg) {
         int byte2 = (int) raw_samples[i];
         int voltage = (byte1 << 8) | byte2;
         TYPE sample = (TYPE)(voltage / (TYPE)max_sample_value);
+        pthread_mutex_lock(buffer->elements_lock);
         ring_buffer_push(buffer, sample);
+        pthread_mutex_unlock(buffer->elements_lock);
       }
     }
   }

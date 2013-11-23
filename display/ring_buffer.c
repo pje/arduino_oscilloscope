@@ -1,3 +1,4 @@
+#include <pthread.h>
 #include <stdio.h>
 #include <stddef.h>
 #include <stdlib.h>
@@ -18,11 +19,18 @@ RingBuffer *ring_buffer_init(size_t size) {
   rb->elements = elements;
   rb->head_index = size;
   rb->size = size;
+  rb->elements_lock = (pthread_mutex_t*) malloc(sizeof(pthread_mutex_t));
+  if (rb->elements_lock == NULL) {
+    fprintf(stderr, "unable to malloc() RingBuffer pthread_mutex_t");
+    exit(EXIT_FAILURE);
+  }
+  pthread_mutex_init(rb->elements_lock, NULL);
   return(rb);
 }
 
 void ring_buffer_free(RingBuffer *buffer) {
   free(buffer->elements);
+  pthread_mutex_destroy(buffer->elements_lock);
   free(buffer);
 }
 

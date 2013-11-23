@@ -43,17 +43,21 @@ RenderArea::RenderArea(QWidget *parent) : QWidget(parent) {
 }
 
 RenderArea::~RenderArea() {
+  pthread_mutex_lock(sample_backlog->elements_lock);
   redraw_timer->stop();
   delete redraw_timer;
   delete pen;
   pthread_kill(*producer_thread, SIGTERM);
+  pthread_mutex_unlock(sample_backlog->elements_lock);
   ring_buffer_free(sample_backlog);
   free(samples_drawable);
   free(render_points);
 }
 
 void RenderArea::on_redraw_timer_timeout() {
+  pthread_mutex_lock(sample_backlog->elements_lock);
   ring_buffer_get_n(this->sample_backlog, this->size().width(), this->samples_drawable);
+  pthread_mutex_unlock(sample_backlog->elements_lock);
   for (size_t i = 0; i < (size_t)this->size().width(); i++) {
     this->render_points[i].setX(i);
     this->render_points[i].setY(this->samples_drawable[i] * this->size().height());
