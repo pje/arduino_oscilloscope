@@ -8,7 +8,6 @@
 #include <QSize>
 #include <QTimer>
 #include <QWidget>
-#include <math.h>
 #include <pthread.h>
 #include "renderarea.h"
 
