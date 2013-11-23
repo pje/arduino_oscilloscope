@@ -62,8 +62,11 @@ int serialport_read(int fd, unsigned char* buf, size_t buf_max, int sleep_micros
     size_t i = 0;
     while (i < buf_max) {
         int n = read(fd, b, 1);
-        if(n == -1) return -1;
-        if(n ==  0) continue;
+
+        switch(n) {
+            case -1: return(-1);
+            case 0: usleep(sleep_micros); continue;
+        }
         buf[i] = b[0];
         i++;
     }
