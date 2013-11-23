@@ -1,3 +1,4 @@
+#include <pthread.h>
 #include <stdio.h>
 #include <stddef.h>
 #include <stdlib.h>
@@ -10,40 +11,50 @@ RingBuffer *ring_buffer_init(size_t size) {
   rb->elements = elements;
   rb->head_index = size;
   rb->size = size;
+  rb->lock = (pthread_mutex_t*) malloc(sizeof(pthread_mutex_t));
+
+  pthread_mutex_init(rb->lock, NULL);
   return(rb);
 }
 
 void ring_buffer_free(RingBuffer *buffer) {
+  pthread_mutex_destroy(buffer->lock);
   free(buffer->elements);
   free(buffer);
 }
 
 TYPE ring_buffer_pop(RingBuffer *buffer) {
+  pthread_mutex_lock(buffer->lock);
   TYPE element = buffer->elements[buffer->head_index];
   buffer->head_index = buffer->head_index == (buffer->size - 1) ? 0 : buffer->head_index + 1;
+  pthread_mutex_unlock(buffer->lock);
   return element;
 }
 
 TYPE ring_buffer_get(const RingBuffer *buffer, size_t index) {
-  return buffer->elements[(buffer->head_index + index) % buffer->size];
+  TYPE element = buffer->elements[(buffer->head_index + index) % buffer->size];
+  return element;
 }
 
 int ring_buffer_get_n(const RingBuffer *buffer, size_t amount_requested, TYPE* output_buffer) {
+  pthread_mutex_lock(buffer->lock);
   size_t section_a_num_elements = buffer->size - buffer->head_index;
   TYPE *section_a_start_address = buffer->elements + buffer->head_index;
   memcpy(output_buffer, section_a_start_address, sizeof(TYPE) * section_a_num_elements);
   if(amount_requested > section_a_num_elements) {
     size_t section_b_num_elements = buffer->head_index;
     TYPE *section_b_start_address = buffer->elements;
-    memcpy(output_buffer, section_a_start_address, section_a_num_elements);
     memcpy(output_buffer + section_a_num_elements, section_b_start_address, sizeof(TYPE) * section_b_num_elements);
   }
+  pthread_mutex_unlock(buffer->lock);
   return 0; // todo: return success/failure on memcpy failure
 }
 
 void ring_buffer_push(RingBuffer *buffer, TYPE element) {
+  pthread_mutex_lock(buffer->lock);
   buffer->head_index = buffer->head_index == 0 ? buffer->size - 1 : buffer->head_index - 1;
   buffer->elements[buffer->head_index % buffer->size] = element;
+  pthread_mutex_unlock(buffer->lock);
 }
 
 void ring_buffer_inspect(const RingBuffer *buffer) {

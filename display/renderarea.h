@@ -16,6 +16,10 @@ public:
   const static size_t samples_in_backlog = 6000;
   const static size_t samples_per_second = 1200;
   const static size_t default_window_size = 1000;
+
+  size_t num_samples_to_draw;
+  double *samples_to_draw;
+
   QPoint *points;
   RingBuffer *sample_backlog;
   QSize minimumSizeHint(void) const;

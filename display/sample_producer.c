@@ -26,7 +26,7 @@ void *sample_producer_start(void *arg) {
   // samples_in_backlog     = seconds_in_backlog * samples_per_second
   // 6000                   = 10                 * 600
 
-  const samples_per_second = 1200;
+  // const int samples_per_second = 1200;
   const int max_sample_value = 1024;
   size_t to_produce = 1024;
 

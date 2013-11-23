@@ -1,12 +1,15 @@
 #ifndef RINGBUFFER_H
 #define RINGBUFFER_H
 
+#include <pthread.h>
+
 #define TYPE double
 
 typedef struct RingBuffer {
   TYPE *elements;
   size_t size;
   size_t head_index;
+  pthread_mutex_t *lock;
 } RingBuffer;
 
 RingBuffer *ring_buffer_init(size_t size);
