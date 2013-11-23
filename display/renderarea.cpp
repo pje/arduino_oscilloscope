@@ -25,8 +25,8 @@ RenderArea::RenderArea(QWidget *parent) : QWidget(parent) {
   if (this->points == NULL) exit(1);
 
   this->num_samples_to_draw = this->default_window_size;
-  this->samples_to_draw = (double *)malloc(num_samples_to_draw * sizeof(TYPE));
-  if (this->samples_to_draw == NULL) exit(1);
+  this->samples_drawable = (double *)malloc(num_samples_to_draw * sizeof(TYPE));
+  if (this->samples_drawable == NULL) exit(1);
 
   pthread_t *producer_thread = (pthread_t*) malloc(sizeof(pthread_t));
   if (producer_thread == NULL) exit(1);
@@ -40,7 +40,7 @@ RenderArea::RenderArea(QWidget *parent) : QWidget(parent) {
 
 RenderArea::~RenderArea() {
   ring_buffer_free(sample_backlog);
-  free(samples_to_draw);
+  free(samples_drawable);
   free(points);
 }
 
@@ -53,11 +53,10 @@ QSize RenderArea::sizeHint(void) const {
 }
 
 void RenderArea::on_redraw_timer_timeout() {
-  ring_buffer_get_n(this->sample_backlog, this->num_samples_to_draw, this->samples_to_draw);
+  ring_buffer_get_n(this->sample_backlog, this->num_samples_to_draw, this->samples_drawable);
   for (size_t i = 0; i < this->num_samples_to_draw; i++) {
-    this->points[i] = QPoint(i, (this->samples_to_draw[i] * this->sizeHint().height()));
+    this->points[i] = QPoint(i, (this->samples_drawable[i] * this->sizeHint().height()));
   }
-  printf("on_redraw_timer_timeout: success\n");
   this->update();
 }
 

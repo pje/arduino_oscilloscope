@@ -18,7 +18,7 @@ public:
   const static size_t default_window_size = 1000;
 
   size_t num_samples_to_draw;
-  double *samples_to_draw;
+  double *samples_drawable;
 
   QPoint *points;
   RingBuffer *sample_backlog;
