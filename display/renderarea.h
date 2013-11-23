@@ -28,6 +28,7 @@ protected:
 
 private:
   QPoint *render_points;
+  double *samples_drawable;
   pthread_t *producer_thread;
   QTimer *redraw_timer;
   QPen *pen;

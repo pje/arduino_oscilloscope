@@ -27,6 +27,7 @@ RenderArea::RenderArea(QWidget *parent) : QWidget(parent) {
   for(size_t i = 0; i < num_points; i++) {
     render_points[i] = QPoint();
   }
+  this->samples_drawable = (TYPE*)calloc(this->size().width(), sizeof(TYPE));
   producer_thread = (pthread_t*) malloc(sizeof(pthread_t));
   if (producer_thread == NULL) exit(1);
   pthread_create(producer_thread, NULL, sample_producer_start, (void *) this->sample_backlog);
@@ -41,14 +42,15 @@ RenderArea::~RenderArea() {
   delete pen;
   pthread_kill(*producer_thread, SIGTERM);
   ring_buffer_free(sample_backlog);
+  free(samples_drawable);
   free(render_points);
 }
 
 void RenderArea::on_redraw_timer_timeout() {
+  ring_buffer_get_n(this->sample_backlog, this->size().width(), this->samples_drawable);
   for (size_t i = 0; i < (size_t)this->size().width(); i++) {
-    TYPE sample = ring_buffer_get(this->sample_backlog, i);
     this->render_points[i].setX(i);
-    this->render_points[i].setY(sample * this->size().height());
+    this->render_points[i].setY(this->samples_drawable[i] * this->size().height());
   }
   this->update();
 }
