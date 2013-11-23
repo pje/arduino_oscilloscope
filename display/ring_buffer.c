@@ -7,11 +7,14 @@
 
 RingBuffer *ring_buffer_init(size_t size) {
   TYPE *elements = calloc(size, sizeof(TYPE));
+  if (elements == NULL) exit(1);
   RingBuffer *rb = malloc(sizeof(RingBuffer));
+  if (rb == NULL) exit(1);
   rb->elements = elements;
   rb->head_index = size;
   rb->size = size;
   rb->lock = (pthread_mutex_t*) malloc(sizeof(pthread_mutex_t));
+  if (rb->lock == NULL) exit(1);
 
   pthread_mutex_init(rb->lock, NULL);
   return(rb);

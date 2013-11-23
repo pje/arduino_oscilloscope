@@ -29,6 +29,8 @@ RenderArea::RenderArea(QWidget *parent) : QWidget(parent) {
   if (this->samples_to_draw == NULL) exit(1);
 
   pthread_t *producer_thread = (pthread_t*) malloc(sizeof(pthread_t));
+  if (producer_thread == NULL) exit(1);
+
   pthread_create(producer_thread, NULL, sample_producer_start, (void *) this->sample_backlog);
 
   QTimer *redraw_timer = new QTimer(this);
