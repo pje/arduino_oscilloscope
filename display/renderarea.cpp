@@ -19,7 +19,7 @@ extern "C" {
 
 RenderArea::RenderArea(QWidget *parent) : QWidget(parent) {
   setAutoFillBackground(true);
-  pen = new QPen(QColor(10,10,10), 1);
+  pen = new QPen(QColor(20, 20, 20), 1);
   this->sample_backlog = ring_buffer_init(samples_in_backlog);
   size_t num_points = this->size().width();
   this->render_points = (QPoint*) malloc(num_points * sizeof(QPoint));
