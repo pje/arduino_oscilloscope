@@ -5,7 +5,7 @@ HEADERS=renderarea.h ring_buffer.h window.h sample_producer.h arduino-serial-lib
 TARGET=$(NAME)
 
 $(NAME).pro: $(SOURCES) $(HEADERS)
-	qmake -project -nopwd -Wall "TEMPLATE=app" "CONFIG+=static" "CONFIG-=app_bundle" "TARGET=$(NAME)" $(SOURCES) $(HEADERS)
+	qmake -project -nopwd -Wall "TEMPLATE=app" "CONFIG-=app_bundle" "TARGET=$(NAME)" $(SOURCES) $(HEADERS)
 
 Makefile.generated: $(NAME).pro
 	qmake -makefile -Wall -o Makefile.generated
