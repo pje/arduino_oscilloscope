@@ -38,7 +38,7 @@ void *sample_producer_start(void *arg) {
         int byte1 = (int) raw_samples[i - 1];
         int byte2 = (int) raw_samples[i];
         int voltage = (byte1 << 8) | byte2;
-        double sample = (double)(voltage / (double)max_sample_value);
+        TYPE sample = (TYPE)(voltage / (TYPE)max_sample_value);
         ring_buffer_push(buffer, sample);
       }
     }
