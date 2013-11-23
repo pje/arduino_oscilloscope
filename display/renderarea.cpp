@@ -9,6 +9,7 @@
 #include <QTimer>
 #include <QWidget>
 #include <pthread.h>
+#include <signal.h>
 #include "renderarea.h"
 
 extern "C" {
@@ -38,8 +39,8 @@ RenderArea::~RenderArea() {
   redraw_timer->stop();
   delete redraw_timer;
   delete pen;
+  pthread_kill(*producer_thread, SIGTERM);
   ring_buffer_free(sample_backlog);
-  pthread_detach(*producer_thread);
   free(render_points);
 }
 
