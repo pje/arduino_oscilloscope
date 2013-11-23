@@ -43,9 +43,9 @@ int main(int argc, char *argv[]) {
   ring_buffer_push(buffer2, 0.8);
 
   const size_t output_buffer_size = 4;
-  double *output_buffer = calloc(output_buffer_size, sizeof(double));
+  TYPE *output_buffer = calloc(output_buffer_size, sizeof(TYPE));
   ring_buffer_get_n(buffer2, output_buffer_size, output_buffer);
-  double expected_buffer[output_buffer_size] = { 0.8, 0.7, 0.6, 0.5 };
+  TYPE expected_buffer[output_buffer_size] = { 0.8, 0.7, 0.6, 0.5 };
 
   for (int i = 0; i < output_buffer_size; i++) {
     assert(output_buffer[i] == expected_buffer[i]);
@@ -58,10 +58,10 @@ int main(int argc, char *argv[]) {
   //
   // while(1) {
   //   size_t size = 1000;
-  //   double *output_buffer = malloc(size * sizeof(double));
+  //   TYPE *output_buffer = malloc(size * sizeof(TYPE));
   //   RingBuffer *buffer = ring_buffer_init(size);
   //   for (int i = 0; i < size; i++) {
-  //     ring_buffer_push(buffer, (i / (double)size));
+  //     ring_buffer_push(buffer, (i / (TYPE)size));
   //   }
   //   for (int i = 0; i < size; i++) {
   //     ring_buffer_get_n(buffer, i, output_buffer);
