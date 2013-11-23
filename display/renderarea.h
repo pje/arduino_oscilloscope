@@ -14,8 +14,6 @@ class RenderArea : public QWidget {
 public:
   RenderArea(QWidget *parent = 0);
   ~RenderArea();
-  RingBuffer *sample_backlog;
-  const static size_t samples_in_backlog = 1000;
 
   QSize minimumSizeHint(void) const;
   QSize sizeHint(void) const;
@@ -25,6 +23,9 @@ public slots:
 
 protected:
   void paintEvent(QPaintEvent *event);
+
+  RingBuffer *sample_backlog;
+  const static size_t samples_in_backlog = 1000;
 
 private:
   QPoint *render_points;
