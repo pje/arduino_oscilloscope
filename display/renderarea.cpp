@@ -55,12 +55,13 @@ RenderArea::~RenderArea() {
 }
 
 void RenderArea::on_redraw_timer_timeout() {
+  size_t num_samples_to_render = this->size().width();
   pthread_mutex_lock(sample_backlog->elements_lock);
-  ring_buffer_get_n(this->sample_backlog, this->size().width(), this->samples_drawable);
+  ring_buffer_get_n(this->sample_backlog, num_samples_to_render, this->samples_drawable);
   pthread_mutex_unlock(sample_backlog->elements_lock);
-  for (size_t i = 0; i < (size_t)this->size().width(); i++) {
+  for (size_t i = 0; i < num_samples_to_render; i++) {
     this->render_points[i].setX(i);
-    this->render_points[i].setY(this->samples_drawable[i] * this->size().height());
+    this->render_points[i].setY(this->samples_drawable[num_samples_to_render - i] * this->size().height());
   }
   this->update();
 }
