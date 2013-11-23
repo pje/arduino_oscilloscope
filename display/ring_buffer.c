@@ -45,7 +45,7 @@ int ring_buffer_get_n(const RingBuffer *buffer, size_t amount_requested, TYPE* o
   TYPE *section_a_start_address = buffer->elements + buffer->head_index;
   memcpy(output_buffer, section_a_start_address, sizeof(TYPE) * section_a_num_elements);
   if(amount_requested > section_a_num_elements) {
-    size_t section_b_num_elements = buffer->head_index;
+    size_t section_b_num_elements = (buffer->head_index - (amount_requested - section_a_num_elements));
     TYPE *section_b_start_address = buffer->elements;
     memcpy(output_buffer + section_a_num_elements, section_b_start_address, sizeof(TYPE) * section_b_num_elements);
   }
