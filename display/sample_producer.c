@@ -1,4 +1,3 @@
-#include <math.h>
 #include <pthread.h>
 #include <stdlib.h>
 #include <stdio.h>
@@ -8,8 +7,6 @@
 #include "sample_producer.h"
 #include "ring_buffer.h"
 #include "arduino-serial-lib.h"
-
-#define PI 3.14159265358979323846264338327950288419716939937510582097
 
 void *sample_producer_start(void *arg) {
   RingBuffer *buffer = (RingBuffer*) arg;
@@ -26,21 +23,19 @@ void *sample_producer_start(void *arg) {
   // samples_in_backlog     = seconds_in_backlog * samples_per_second
   // 6000                   = 10                 * 600
 
-  // const int samples_per_second = 1200;
   const int max_sample_value = 1024;
-  size_t to_produce = 1024;
-
   fd = serialport_init(serialport, baudrate);
   if (fd == -1) sample_producer_error("couldn't open port");
-
+  const size_t num_raw_samples = 2;
+  unsigned char raw_samples[2];
   while(1) {
-    unsigned char buf[to_produce];
-    memset(buf, 0, buffer->size);
     serialport_read(fd, buf, buffer->size);
-    for (size_t i = 0; i < buffer->size; i++){
+    memset(raw_samples, 0, sizeof(unsigned char) * num_raw_samples);
+    if(read_result < 0) sample_producer_error("read() returned negative value");
+    for (size_t i = 0; i < num_raw_samples; i++){
       if (i % 2 == 1) {
-        int byte1 = (int) buf[i - 1];
-        int byte2 = (int) buf[i];
+        int byte1 = (int) raw_samples[i - 1];
+        int byte2 = (int) raw_samples[i];
         int voltage = (byte1 << 8) | byte2;
         double sample = (double)(voltage / (double)max_sample_value);
         ring_buffer_push(buffer, sample);

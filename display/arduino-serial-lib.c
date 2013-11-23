@@ -46,7 +46,7 @@ int serialport_init(const char* serialport, int baud) {
     toptions.c_cc[VTIME] = 0;
 
     tcsetattr(fd, TCSANOW, &toptions);
-    if(tcsetattr(fd, TCSAFLUSH, &toptions) < 0) {
+    if (tcsetattr(fd, TCSAFLUSH, &toptions) < 0) {
         perror("init_serialport: Couldn't set term attributes");
         return -1;
     }
@@ -60,7 +60,7 @@ int serialport_close( int fd ) {
 int serialport_read(int fd, unsigned char* buf, size_t buf_max) {
     unsigned char b[1];
     size_t i = 0;
-    while(i < buf_max) {
+    while (i < buf_max) {
         int n = read(fd, b, 1);
         if(n == -1) return -1;
         if(n ==  0) continue;
