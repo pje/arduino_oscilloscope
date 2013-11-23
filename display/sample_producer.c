@@ -24,13 +24,14 @@ void *sample_producer_start(void *arg) {
   // 6000                   = 10                 * 600
 
   const int max_sample_value = 1024;
+  const int sleep_micros = 2000;
   fd = serialport_init(serialport, baudrate);
   if (fd == -1) sample_producer_error("couldn't open port");
   const size_t num_raw_samples = 2;
   unsigned char raw_samples[2];
   while(1) {
-    serialport_read(fd, buf, buffer->size);
     memset(raw_samples, 0, sizeof(unsigned char) * num_raw_samples);
+    int read_result = serialport_read(fd, raw_samples, num_raw_samples, sleep_micros);
     if(read_result < 0) sample_producer_error("read() returned negative value");
     for (size_t i = 0; i < num_raw_samples; i++){
       if (i % 2 == 1) {

@@ -57,7 +57,7 @@ int serialport_close( int fd ) {
     return close( fd );
 }
 
-int serialport_read(int fd, unsigned char* buf, size_t buf_max) {
+int serialport_read(int fd, unsigned char* buf, size_t buf_max, int sleep_micros) {
     unsigned char b[1];
     size_t i = 0;
     while (i < buf_max) {
