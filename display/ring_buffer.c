@@ -6,9 +6,15 @@
 
 RingBuffer *ring_buffer_init(size_t size) {
   TYPE *elements = calloc(size, sizeof(TYPE));
-  if (elements == NULL) exit(1);
+  if (elements == NULL) {
+    fprintf(stderr, "unable to malloc() RingBuffer elements");
+    exit(EXIT_FAILURE);
+  }
   RingBuffer *rb = malloc(sizeof(RingBuffer));
-  if (rb == NULL) exit(1);
+  if (rb == NULL) {
+    fprintf(stderr, "unable to malloc() RingBuffer");
+    exit(EXIT_FAILURE);
+  }
   rb->elements = elements;
   rb->head_index = size;
   rb->size = size;

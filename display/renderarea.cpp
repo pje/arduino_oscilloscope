@@ -23,13 +23,19 @@ RenderArea::RenderArea(QWidget *parent) : QWidget(parent) {
   this->sample_backlog = ring_buffer_init(samples_in_backlog);
   size_t num_points = this->size().width();
   this->render_points = (QPoint*) malloc(num_points * sizeof(QPoint));
-  if (render_points == NULL) exit(1);
+  if (render_points == NULL) {
+    fprintf(stderr, "unable to malloc() QPoint array");
+    exit(EXIT_FAILURE);
+  }
   for(size_t i = 0; i < num_points; i++) {
     render_points[i] = QPoint();
   }
   this->samples_drawable = (TYPE*)calloc(this->size().width(), sizeof(TYPE));
   producer_thread = (pthread_t*) malloc(sizeof(pthread_t));
-  if (producer_thread == NULL) exit(1);
+  if (producer_thread == NULL) {
+    fprintf(stderr, "unable to malloc() pthread");
+    exit(EXIT_FAILURE);
+  }
   pthread_create(producer_thread, NULL, sample_producer_start, (void *) this->sample_backlog);
   this->redraw_timer = new QTimer(this);
   connect(redraw_timer, SIGNAL(timeout()), this, SLOT(on_redraw_timer_timeout()));
