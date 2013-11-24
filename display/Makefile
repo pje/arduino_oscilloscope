@@ -1,11 +1,12 @@
 PROJECT_ROOT=$(CURDIR)
 NAME=display
-SOURCES=main.cpp renderarea.cpp ring_buffer.c window.cpp sample_producer.c arduino-serial-lib.c
-HEADERS=renderarea.h ring_buffer.h window.h sample_producer.h arduino-serial-lib.h
+SOURCES=arduino-serial-lib.c renderarea.cpp ring_buffer.c sample_producer.c window.cpp
+HEADERS=arduino-serial-lib.h renderarea.hpp ring_buffer.h sample_producer.h window.hpp
+MAIN=main.cpp
 TARGET=$(NAME)
 
-$(NAME).pro: $(SOURCES) $(HEADERS)
-	qmake -project -nopwd -Wall "TEMPLATE=app" "CONFIG-=app_bundle" "TARGET=$(NAME)" $(SOURCES) $(HEADERS)
+$(NAME).pro: $(SOURCES) $(HEADERS) $(MAIN)
+	qmake -project -nopwd -Wall "TEMPLATE=app" "CONFIG-=app_bundle" "TARGET=$(NAME)" $(SOURCES) $(HEADERS) $(MAIN)
 
 Makefile.generated: $(NAME).pro
 	qmake -makefile -Wall -o Makefile.generated
