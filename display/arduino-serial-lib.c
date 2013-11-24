@@ -60,14 +60,17 @@ int serialport_close( int fd ) {
 int serialport_read(int fd, unsigned char* buf, size_t buf_max, int sleep_micros) {
   unsigned char b[1];
   size_t i = 0;
+  size_t bytes_read = 0;
+
   while (i < buf_max) {
     int n = read(fd, b, 1);
     switch(n) {
       case -1: return(-1);
       case 0: usleep(sleep_micros); continue;
     }
+    bytes_read += n;
     buf[i] = b[0];
     i++;
   }
-  return 0;
+  return bytes_read;
 }
