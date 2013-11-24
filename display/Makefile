@@ -20,6 +20,7 @@ clean:
 	rm -rf Makefile.generated
 	rm -rf $(NAME).pro
 	rm -rf $(TARGET)
+	rm -rf ring_buffer_test
 
 run:
 	./$(TARGET)
