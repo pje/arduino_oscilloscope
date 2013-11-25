@@ -7,7 +7,7 @@
 #include <sys/ioctl.h>
 #include "arduino-serial-lib.h"
 
-int serialport_init(const char* serialport, int baud) {
+int serialport_init(const char* serial_port, int baud_rate) {
   struct termios toptions;
   int fd = open(serialport, O_RDWR | O_NOCTTY | O_NDELAY);
   if (fd == -1)  {

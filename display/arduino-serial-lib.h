@@ -3,7 +3,7 @@
 
 #include <stdint.h>
 
-int serialport_init(const char *serialport, int baud);
+int serialport_init(const char *serial_port, int baud_rate);
 int serialport_close(int fd);
 int serialport_flush(int fd);
 int serialport_read(int fd, unsigned char *buf, size_t buf_max, int sleep_micros);
