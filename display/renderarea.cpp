@@ -20,14 +20,14 @@ extern "C" {
 RenderArea::RenderArea(QWidget *parent) : QWidget(parent) {
   setAutoFillBackground(true);
   pen = new QPen(QColor(20, 20, 20), 1);
-  this->sample_backlog = ring_buffer_init(samples_in_backlog);
-  size_t num_points = this->size().width();
-  this->render_points = (QPoint*) malloc(num_points * sizeof(QPoint));
+  this->sample_backlog = ring_buffer_init(1000);
+  this->num_render_points = this->size().width();
+  this->render_points = (QPoint*) malloc(num_render_points * sizeof(QPoint));
   if (render_points == NULL) {
     fprintf(stderr, "unable to malloc() QPoint array");
     exit(EXIT_FAILURE);
   }
-  for(size_t i = 0; i < num_points; i++) {
+  for (size_t i = 0; i < num_render_points; i++) {
     render_points[i] = QPoint();
   }
   this->samples_drawable = (TYPE*)calloc(this->size().width(), sizeof(TYPE));
@@ -71,7 +71,7 @@ void RenderArea::paintEvent(QPaintEvent *event) {
   QPainter painter(this);
   painter.setRenderHint(QPainter::HighQualityAntialiasing, true);
   painter.setPen(*(this->pen));
-  painter.drawPolyline(render_points, this->size().height());
+  painter.drawPolyline(render_points, this->num_render_points);
 }
 
 QSize RenderArea::minimumSizeHint(void) const {

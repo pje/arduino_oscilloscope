@@ -25,8 +25,7 @@ protected:
   void paintEvent(QPaintEvent *event);
 
   RingBuffer *sample_backlog;
-  const static size_t samples_in_backlog = 1000;
-
+  size_t num_render_points;
 private:
   QPoint *render_points;
   double *samples_drawable;
