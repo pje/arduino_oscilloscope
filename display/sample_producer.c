@@ -8,8 +8,8 @@
 #include "ring_buffer.h"
 #include "arduino-serial-lib.h"
 
-void *sample_producer_start(void *arg) {
-  RingBuffer *buffer = (RingBuffer*) arg;
+void *sample_producer_start(void *ring_buffer) {
+  RingBuffer *buffer = (RingBuffer*) ring_buffer;
   int fd = -1;
   const char *serialport = "/dev/tty.usbserial-A600afNY";
   const int baudrate = 9600;
@@ -51,16 +51,32 @@ void sample_producer_error(char* msg) {
   exit(EXIT_FAILURE);
 }
 
-void sample_producer_print_bits(size_t size, const void *ptr) {
+void sample_producer_print_bytes_little_endian(size_t num_bytes, const void *ptr) {
   unsigned char *b = (unsigned char*) ptr;
   unsigned char byte;
   int i, j;
-  for (i = size-1; i >= 0; i--) {
+  for (i = 0; i <= num_bytes-1; i++) {
     for (j = 7; j >= 0; j--) {
       byte = b[i] & (1 << j);
       byte >>= j;
       printf("%u", byte);
     }
+    printf(" ");
+  }
+  printf("\n");
+}
+
+void sample_producer_print_bytes_big_endian(size_t num_bytes, const void *ptr) {
+  unsigned char *b = (unsigned char*) ptr;
+  unsigned char byte;
+  int i, j;
+  for (i = num_bytes-1; i >= 0; i--) {
+    for (j = 7; j >= 0; j--) {
+      byte = b[i] & (1 << j);
+      byte >>= j;
+      printf("%u", byte);
+    }
+    printf(" ");
   }
   printf("\n");
 }
