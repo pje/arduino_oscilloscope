@@ -6,7 +6,7 @@ MAIN=main.cpp
 TARGET=$(NAME)
 
 $(NAME).pro: $(SOURCES) $(HEADERS) $(MAIN)
-	qmake -project -nopwd -Wall "TEMPLATE=app" "CONFIG-=app_bundle" "TARGET=$(NAME)" $(SOURCES) $(HEADERS) $(MAIN)
+	qmake -project -nopwd -Wall "QMAKE_MACOSX_DEPLOYMENT_TARGET=10.8" "QMAKE_CFLAGS+=-std=c99" "TEMPLATE=app" "CONFIG-=app_bundle" "TARGET=$(NAME)" $(SOURCES) $(HEADERS) $(MAIN)
 
 Makefile.generated: $(NAME).pro
 	qmake -makefile -Wall -o Makefile.generated
