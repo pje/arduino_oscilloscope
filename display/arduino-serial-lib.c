@@ -8,19 +8,22 @@
 #include "arduino-serial-lib.h"
 
 int serialport_init(const char* serial_port, int baud_rate) {
+  int fd = -1;
   struct termios toptions;
-  int fd = open(serialport, O_RDWR | O_NOCTTY | O_NDELAY);
+
+  fd = open(serial_port, O_RDWR | O_NOCTTY | O_NDELAY);
   if (fd == -1)  {
     perror("serialport_init: Unable to open port");
-    perror(serialport);
+    perror(serial_port);
     return -1;
   }
+
   if (tcgetattr(fd, &toptions) < 0) {
     perror("serialport_init: Couldn't get term attributes");
     return -1;
   }
-  speed_t brate = baud;
-  switch(baud) {
+  speed_t brate = baud_rate;
+  switch(baud_rate) {
     case 4800:   brate=B4800;   break;
     case 9600:   brate=B9600;   break;
     case 14400:  brate=B14400;  break;
