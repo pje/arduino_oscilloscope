@@ -50,33 +50,3 @@ void sample_producer_error(char* msg) {
   fprintf(stderr, "%s\n",msg);
   exit(EXIT_FAILURE);
 }
-
-void sample_producer_print_bytes_little_endian(size_t num_bytes, const void *ptr) {
-  unsigned char *b = (unsigned char*) ptr;
-  unsigned char byte;
-  int i, j;
-  for (i = 0; i <= num_bytes-1; i++) {
-    for (j = 7; j >= 0; j--) {
-      byte = b[i] & (1 << j);
-      byte >>= j;
-      printf("%u", byte);
-    }
-    printf(" ");
-  }
-  printf("\n");
-}
-
-void sample_producer_print_bytes_big_endian(size_t num_bytes, const void *ptr) {
-  unsigned char *b = (unsigned char*) ptr;
-  unsigned char byte;
-  int i, j;
-  for (i = num_bytes-1; i >= 0; i--) {
-    for (j = 7; j >= 0; j--) {
-      byte = b[i] & (1 << j);
-      byte >>= j;
-      printf("%u", byte);
-    }
-    printf(" ");
-  }
-  printf("\n");
-}
