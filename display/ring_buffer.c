@@ -6,17 +6,16 @@
 #include "ring_buffer.h"
 
 RingBuffer *ring_buffer_init(size_t size) {
-  TYPE *elements = calloc(size, sizeof(TYPE));
-  if (elements == NULL) {
-    fprintf(stderr, "unable to malloc() RingBuffer elements");
-    exit(EXIT_FAILURE);
-  }
   RingBuffer *rb = malloc(sizeof(RingBuffer));
   if (rb == NULL) {
     fprintf(stderr, "unable to malloc() RingBuffer");
     exit(EXIT_FAILURE);
   }
-  rb->elements = elements;
+  rb->elements = calloc(size, sizeof(TYPE));
+  if (rb->elements == NULL) {
+    fprintf(stderr, "unable to malloc() RingBuffer elements");
+    exit(EXIT_FAILURE);
+  }
   rb->head_index = size;
   rb->size = size;
   rb->elements_lock = (pthread_mutex_t*) malloc(sizeof(pthread_mutex_t));
