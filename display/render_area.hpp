@@ -26,6 +26,7 @@ protected:
 
   RingBuffer *sample_backlog;
   size_t num_render_points;
+
 private:
   QPoint *render_points;
   double *samples_drawable;
