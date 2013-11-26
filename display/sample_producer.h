@@ -1,5 +1,5 @@
-#ifndef SAMPLEPRODUCER_H
-#define SAMPLEPRODUCER_H
+#ifndef SAMPLE_PRODUCER_H
+#define SAMPLE_PRODUCER_H
 
 struct RingBuffer;
 

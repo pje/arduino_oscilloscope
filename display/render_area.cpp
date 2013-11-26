@@ -10,7 +10,7 @@
 #include <QWidget>
 #include <pthread.h>
 #include <signal.h>
-#include "renderarea.hpp"
+#include "render_area.hpp"
 
 extern "C" {
 #include "ring_buffer.h"

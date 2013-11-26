@@ -1,5 +1,5 @@
 #include <QGridLayout>
-#include "renderarea.hpp"
+#include "render_area.hpp"
 #include "window.hpp"
 
 const int IdRole = Qt::UserRole;

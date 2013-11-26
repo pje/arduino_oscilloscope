@@ -1,7 +1,7 @@
 PROJECT_ROOT=$(CURDIR)
 NAME=display
-SOURCES=arduino-serial-lib.c renderarea.cpp ring_buffer.c sample_producer.c window.cpp
-HEADERS=arduino-serial-lib.h renderarea.hpp ring_buffer.h sample_producer.h window.hpp
+SOURCES=arduino_serial_port.c render_area.cpp ring_buffer.c sample_producer.c window.cpp
+HEADERS=arduino_serial_port.h render_area.hpp ring_buffer.h sample_producer.h window.hpp
 MAIN=main.cpp
 TARGET=$(NAME)
 

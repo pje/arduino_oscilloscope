@@ -1,5 +1,5 @@
-#ifndef RINGBUFFER_H
-#define RINGBUFFER_H
+#ifndef RING_BUFFER_H
+#define RING_BUFFER_H
 
 #include <pthread.h>
 

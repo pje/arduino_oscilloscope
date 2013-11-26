@@ -6,7 +6,7 @@
 #include <unistd.h>
 #include "sample_producer.h"
 #include "ring_buffer.h"
-#include "arduino-serial-lib.h"
+#include "arduino_serial_port.h"
 
 void *sample_producer_start(void *ring_buffer) {
   RingBuffer *buffer = (RingBuffer*) ring_buffer;
@@ -24,13 +24,13 @@ void *sample_producer_start(void *ring_buffer) {
 
   const int max_sample_value = 1024;
   const int sleep_micros = 1000; // 1 millisecond
-  fd = serialport_init(serialport, baudrate);
+  fd = arduino_serial_port_init(port, baudrate);
   if (fd == -1) sample_producer_error("couldn't open port");
   const size_t num_raw_samples = 2;
   unsigned char raw_samples[2];
   while(1) {
-    memset(raw_samples, 0, sizeof(unsigned char) * num_raw_samples);
-    int read_result = serialport_read(fd, raw_samples, num_raw_samples, sleep_micros);
+    memset(raw_samples, 0, sizeof(unsigned char) * protocol_sample_frame_size);
+    int read_result = arduino_serial_port_read(fd, raw_samples, protocol_sample_frame_size, sleep_micros);
     if(read_result < 0) sample_producer_error("read() returned negative value");
     for (size_t i = 0; i < num_raw_samples; i++){
       if (i % 2 == 1) {

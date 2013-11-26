@@ -5,21 +5,21 @@
 #include <termios.h>
 #include <string.h>
 #include <sys/ioctl.h>
-#include "arduino-serial-lib.h"
+#include "arduino_serial_port.h"
 
-int serialport_init(const char* serial_port, int baud_rate) {
+int arduino_serial_port_init(const char* serial_port, int baud_rate) {
   int fd = -1;
   struct termios toptions;
 
   fd = open(serial_port, O_RDWR | O_NOCTTY | O_NDELAY);
   if (fd == -1)  {
-    perror("serialport_init: Unable to open port");
+    perror("arduino_serial_port_init: Unable to open port");
     perror(serial_port);
     return -1;
   }
 
   if (tcgetattr(fd, &toptions) < 0) {
-    perror("serialport_init: Couldn't get term attributes");
+    perror("arduino_serial_port_init: Couldn't get term attributes");
     return -1;
   }
   speed_t brate = baud_rate;
@@ -50,17 +50,17 @@ int serialport_init(const char* serial_port, int baud_rate) {
 
   tcsetattr(fd, TCSANOW, &toptions);
   if (tcsetattr(fd, TCSAFLUSH, &toptions) < 0) {
-    perror("init_serialport: Couldn't set term attributes");
+    perror("arduino_serial_port_init: Couldn't set term attributes");
     return -1;
   }
   return fd;
 }
 
-int serialport_close( int fd ) {
+int arduino_serial_port_close( int fd ) {
   return close( fd );
 }
 
-int serialport_read(int fd, unsigned char* buf, size_t buf_max, int sleep_micros) {
+int arduino_serial_port_read(int fd, unsigned char* buf, size_t buf_max, int sleep_micros) {
   unsigned char b[1];
   size_t i = 0;
   size_t bytes_read = 0;
