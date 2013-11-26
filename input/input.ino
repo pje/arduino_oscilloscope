@@ -15,14 +15,13 @@ void setup() {
   Serial.begin(serialBaudRate);
 }
 
-void serialWriteVoltageSample(int voltage) {      // 1023: 00000011 11111111
-  byte byte1 = ((voltage >> NBBY) & 0b11111111);  //       00000000 00000011
-  byte byte2 = (voltage & 0b11111111);            //       00000000 11111111
-  Serial.write(byte1);
-  Serial.write(byte2);
-  Serial.write(end_of_sample_frame_byte);
-//  byte bytes[3] = { byte1, byte2, end_of_sample_frame_byte };
-//  Serial.write(bytes, 3);
+void serialWriteVoltageSample(int voltage) {
+  unsigned char voltageByte = (unsigned char)(((double)voltage / (double)voltage_max_value) * 255.0);
+
+//  byte byte1 = ((voltage >> NBBY) & 0b11111111);
+//  byte byte2 = (voltage & 0b11111111);
+
+  Serial.write(voltageByte);
 }
 
 void loop() {
