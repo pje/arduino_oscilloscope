@@ -42,14 +42,53 @@ int main(int argc, char *argv[]) {
   ring_buffer_push(buffer2, 0.7);
   ring_buffer_push(buffer2, 0.8);
 
-  const size_t output_buffer_size = 4;
-  TYPE *output_buffer = calloc(output_buffer_size, sizeof(TYPE));
-  ring_buffer_get_n(buffer2, output_buffer_size, output_buffer);
-  TYPE expected_buffer[output_buffer_size] = { 0.8, 0.7, 0.6, 0.5 };
+  TYPE *output_buffer = calloc(4, sizeof(TYPE));
+  ring_buffer_get_n(buffer2, 4, output_buffer);
+  TYPE *expected_buffer = calloc(4, sizeof(TYPE));
+  expected_buffer[0] = 0.8;
+  expected_buffer[1] = 0.7;
+  expected_buffer[2] = 0.6;
+  expected_buffer[3] = 0.5;
 
-  for (int i = 0; i < output_buffer_size; i++) {
+  for (int i = 0; i < 4; i++) {
     assert(output_buffer[i] == expected_buffer[i]);
   }
+  free(output_buffer);
+
+  ring_buffer_push(buffer2, 1.0);
+  ring_buffer_push(buffer2, 2.0);
+  ring_buffer_push(buffer2, 3.0);
+  ring_buffer_push(buffer2, 4.0);
+  ring_buffer_push(buffer2, 5.0);
+
+  output_buffer = calloc(6, sizeof(TYPE));
+  ring_buffer_get_n(buffer2, 6, output_buffer);
+  expected_buffer = calloc(6, sizeof(TYPE));
+  expected_buffer[0] = 5.0;
+  expected_buffer[1] = 4.0;
+  expected_buffer[2] = 3.0;
+  expected_buffer[3] = 2.0;
+  expected_buffer[4] = 1.0;
+  expected_buffer[5] = 0.8;
+
+  printf("output_buffer: ");
+  printf("{ ");
+  for (int i = 0; i < 6; i++) {
+    printf("%f, ", output_buffer[i]);
+  }
+  printf(" }\n");
+
+  printf("expected_buffer: ");
+  printf("{ ");
+  for (int i = 0; i < 6; i++) {
+    printf("%f, ", expected_buffer[i]);
+  }
+  printf(" }\n");
+
+  for (int i = 0; i < 6; i++) {
+    assert(output_buffer[i] == expected_buffer[i]);
+  }
+  free(output_buffer);
 
   printf("success!\n");
 
