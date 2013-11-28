@@ -102,6 +102,7 @@ void window_resize_callback(GLFWwindow* window, int width, int height) {
   current_width = width;
   current_height = height;
   sizeof_samples_drawable = width;
+  double ratio = (height/(double)width);
 
   for (size_t tries = 0; tries <= mutex_attempts; tries++) {
     int result = pthread_mutex_lock(samples_drawable_lock);
@@ -114,6 +115,10 @@ void window_resize_callback(GLFWwindow* window, int width, int height) {
   samples_drawable = (TYPE*) malloc(sizeof_samples_drawable * sizeof(TYPE));
   memset(samples_drawable, 0.5, sizeof(TYPE) * sizeof_samples_drawable);
   pthread_mutex_unlock(samples_drawable_lock);
+
+  glViewport(0, 0, width, height);
+  glLoadIdentity();
+  gluPerspective(60.0, ratio, 1.0, 1024.0);
   glOrtho(0, current_width, 0, current_height, 0, 1);
   update();
 }
@@ -123,6 +128,7 @@ int main(void) {
   glfwSetErrorCallback(error_callback);
   glfwSetWindowSizeCallback(window, window_resize_callback);
   while (!glfwWindowShouldClose(window)) {
+  glfwSetFramebufferSizeCallback(window, window_resize_callback);
     update();
   }
 }
