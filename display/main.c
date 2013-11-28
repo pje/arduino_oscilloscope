@@ -51,6 +51,7 @@ void initialize(void) {
   if (!window) { glfwTerminate(); exit(EXIT_FAILURE); }
   glfwMakeContextCurrent(window);
   glOrtho(0, current_width, 0, current_height, 0, 1);
+  printf("initialize() finished\n");
 }
 
 void update(void) {
@@ -86,6 +87,6 @@ int main(void) {
   initialize();
   while (!glfwWindowShouldClose(window)) {
     update();
-    usleep(100);
+    usleep(10);
   }
 }

@@ -64,12 +64,21 @@ int arduino_serial_port_read(int fd, unsigned char* buf, size_t buf_max, int sle
   unsigned char b[1];
   size_t i = 0;
   size_t bytes_read = 0;
-
   while (i < buf_max) {
     int n = read(fd, b, 1);
     switch(n) {
-      case -1: return(-1);
-      case 0: usleep(sleep_micros); continue;
+      case -1: {
+        return(-1);
+        break;
+      }
+      case 0: {
+        usleep(sleep_micros);
+        continue;
+        break;
+      }
+      default: {
+        break;
+      }
     }
     bytes_read += n;
     buf[i] = b[0];

@@ -8,10 +8,8 @@
 #include "ring_buffer.h"
 #include "arduino_serial_port.h"
 
-//assumes little endian
 void sample_producer_print_bytes(size_t size, void const * const ptr) {
   unsigned char *b = (unsigned char*) ptr;
-
   for (int i = size - 1; i >= 0; i--) {
     for (int j = 7; j >= 0; j--) {
       unsigned char byte = b[i] & (1 << j);
@@ -30,24 +28,34 @@ void *sample_producer_start(void *arg) {
   const char *port = "/dev/tty.usbserial-A600afNY";
   const int baudrate = 9600;
   const int max_sample_value = 1024;
-  const int sleep_micros = 1000;
+  const int sleep_micros = 10;
   fd = arduino_serial_port_init(port, baudrate);
-  if (fd == -1) sample_producer_error("couldn't open port");
+  if (fd == -1) sample_producer_error("couldn't open port", fd);
   const size_t protocol_sample_frame_size = 3;
-  unsigned char raw_samples[protocol_sample_frame_size];
+  unsigned char *raw_samples = malloc(sizeof(unsigned char) * protocol_sample_frame_size);
+  int read_result;
+  unsigned char b[1];
+  int broken_attempts = 4;
+  while(b[0] != 0b11111111) { // just discard the first frame
+    read_result = arduino_serial_port_read(fd, b, 1, sleep_micros);
+    if (--broken_attempts <= 0) { sample_producer_error("couldn't align bits!", fd); }
+  }
 
   while(1) {
-    int read_result;
-    unsigned char b[1];
-    int broken_attempts = 4;
-    while(b[0] != 0b11111111) { // just discard the first frame
-      read_result = arduino_serial_port_read(fd, b, 1, sleep_micros);
-      if (--broken_attempts <= 0) { sample_producer_error("couldn't align bits!"); }
-    }
+    broken_attempts = 4;
     memset(raw_samples, 0, sizeof(unsigned char) * protocol_sample_frame_size);
-    read_result = arduino_serial_port_read(fd, raw_samples, protocol_sample_frame_size, sleep_micros);
-    if(read_result < 0) sample_producer_error("read() returned negative value");
-    if(read_result != protocol_sample_frame_size) sample_producer_error("read() read too many bytes?");
+    for (size_t i = 0; i < protocol_sample_frame_size; i++) {
+      read_result = arduino_serial_port_read(fd, raw_samples + i, 1, sleep_micros);
+      if(read_result < 0) sample_producer_error("read() returned negative value", fd);
+      if(read_result != 1) sample_producer_error("read() read too many bytes?", fd);
+    }
+
+    while(raw_samples[2] != 0b11111111) {
+      raw_samples[0] = raw_samples[1];
+      raw_samples[1] = raw_samples[2];
+      read_result = arduino_serial_port_read(fd, raw_samples + 2, 1, sleep_micros);
+      if (--broken_attempts <= 0) { sample_producer_error("couldn't align bits!", fd); }
+    }
 
     unsigned short int sample_byte_1 = (unsigned short int) raw_samples[1];
     unsigned short int sample_byte_0 = (unsigned short int) raw_samples[0];
@@ -60,7 +68,8 @@ void *sample_producer_start(void *arg) {
   }
 }
 
-void sample_producer_error(char* msg) {
+void sample_producer_error(char* msg, int fd) {
   fprintf(stderr, "%s\n",msg);
+  if (fd > 0) { arduino_serial_port_close(fd); }
   exit(EXIT_FAILURE);
 }

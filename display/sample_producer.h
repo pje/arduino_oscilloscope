@@ -4,6 +4,6 @@
 struct RingBuffer;
 
 void *sample_producer_start(void *ring_buffer);
-void sample_producer_error(char* msg);
+void sample_producer_error(char* msg, int fd);
 
 #endif
