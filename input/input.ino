@@ -5,6 +5,8 @@ const int voltage_max_value = 1024;
 unsigned int a = 0;
 const byte end_of_sample_frame_byte = 0b11111111;
 
+const float pi = 3.14159265359;
+
 void setup() {
   Serial.begin(serialBaudRate);
 }
@@ -33,7 +35,10 @@ void send_voltage_sample(int voltage) {
 }
 
 void loop() {
-  int input_0_sample = (a += 1) % 1024;
+  a += 1;
+  a %= 1024;
+
+  int input_0_sample = (unsigned int)(((1 + sin((a / 1024.0) * (2 * pi))) / 2) * 1024.0);
   int samples[1] = { input_0_sample };
   send_frame(samples, 1);
 }
