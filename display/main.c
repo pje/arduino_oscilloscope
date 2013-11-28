@@ -43,7 +43,7 @@ void initialize(void) {
   ring_buffer = ring_buffer_init(sizeof_ring_buffer);
   producer_thread = malloc(sizeof(pthread_t));
   pthread_create(producer_thread, NULL, sample_producer_start, ring_buffer);
-  if (!glfwInit()) exit(EXIT_FAILURE);
+  if (!glfwInit()) { exit(EXIT_FAILURE); }
   window = glfwCreateWindow(default_width, default_height, "oscil", NULL, NULL);
   if (!window) { glfwTerminate(); exit(EXIT_FAILURE); }
   glfwMakeContextCurrent(window);
