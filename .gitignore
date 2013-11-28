@@ -1,7 +1,8 @@
 display/*.o
-display/tmp/*
-display/vendor/*
 display/display
-display/ring_buffer_test
+display/display.dSYM/
 display/display.xcodeproj/
 display/main_test*
+display/ring_buffer_test
+display/tmp/*
+display/vendor/*
