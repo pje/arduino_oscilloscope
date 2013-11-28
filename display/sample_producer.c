@@ -69,7 +69,6 @@ void *sample_producer_start(void *arg) {
       if (result == 0) { break; }
       else { printf("error code: %d\n", result); }
       if (tries >= mutex_attempts) { sample_producer_error("unable to obtain lock!", fd); }
-      usleep(1);
     }
     ring_buffer_push(buffer, sample);
     pthread_mutex_unlock(buffer->elements_lock);
