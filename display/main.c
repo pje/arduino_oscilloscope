@@ -125,10 +125,15 @@ void window_resize_callback(GLFWwindow* window, int width, int height) {
 
 int main(void) {
   initialize();
+  glfwGetFramebufferSize(window, &current_width, &current_height);
   glfwSetErrorCallback(error_callback);
   glfwSetWindowSizeCallback(window, window_resize_callback);
-  while (!glfwWindowShouldClose(window)) {
   glfwSetFramebufferSizeCallback(window, window_resize_callback);
+  glfwSwapInterval(1);
+  while (1) {
     update();
+    if (glfwWindowShouldClose(window)) { break; }
   }
+  glfwTerminate();
+  exit(EXIT_SUCCESS);
 }
