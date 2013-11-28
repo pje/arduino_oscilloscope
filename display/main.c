@@ -104,7 +104,9 @@ void window_resize_callback(GLFWwindow* window, int width, int height) {
   sizeof_samples_drawable = width;
 
   for (size_t tries = 0; tries <= mutex_attempts; tries++) {
-    if (pthread_mutex_lock(samples_drawable_lock) == 0) { break; }
+    int result = pthread_mutex_lock(samples_drawable_lock);
+    if (result == 0) { break; }
+    else { printf("error code: %d\n", result); }
     if (tries >= mutex_attempts) { printf("unable to obtain lock!\n"); exit(EXIT_FAILURE); }
   }
 
