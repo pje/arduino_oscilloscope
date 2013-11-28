@@ -4,3 +4,4 @@ display/vendor/*
 display/display
 display/ring_buffer_test
 display/display.xcodeproj/
+display/main_test*
