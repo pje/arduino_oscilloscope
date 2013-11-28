@@ -44,7 +44,7 @@ void initialize(void) {
   producer_thread = malloc(sizeof(pthread_t));
   pthread_create(producer_thread, NULL, sample_producer_start, ring_buffer);
   if (!glfwInit()) { exit(EXIT_FAILURE); }
-  window = glfwCreateWindow(default_width, default_height, "oscil", NULL, NULL);
+  window = glfwCreateWindow(default_width, default_height, "oscilloscope", NULL, NULL);
   if (!window) { glfwTerminate(); exit(EXIT_FAILURE); }
   glfwMakeContextCurrent(window);
   glOrtho(0, current_width, 0, current_height, 0, 1);
