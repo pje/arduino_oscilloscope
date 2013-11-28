@@ -125,7 +125,6 @@ void window_resize_callback(GLFWwindow* window, int width, int height) {
 
 int main(void) {
   initialize();
-  glfwGetFramebufferSize(window, &current_width, &current_height);
   glfwSetErrorCallback(error_callback);
   glfwSetWindowSizeCallback(window, window_resize_callback);
   glfwSetFramebufferSizeCallback(window, window_resize_callback);
