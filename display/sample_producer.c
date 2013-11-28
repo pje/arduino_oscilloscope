@@ -29,7 +29,7 @@ void *sample_producer_start(void *arg) {
   const char *port = "/dev/tty.usbserial-A600afNY";
   const int baudrate = 9600;
   const int max_sample_value = 1024;
-  const int sleep_micros = 10;
+  const int sleep_micros = 1000;
   fd = arduino_serial_port_init(port, baudrate);
   if (fd == -1) sample_producer_error("couldn't open port", fd);
   const size_t protocol_sample_frame_size = 3;
@@ -69,7 +69,7 @@ void *sample_producer_start(void *arg) {
       if (result == 0) { break; }
       else { printf("error code: %d\n", result); }
       if (tries >= mutex_attempts) { sample_producer_error("unable to obtain lock!", fd); }
-      usleep(10);
+      usleep(1);
     }
     ring_buffer_push(buffer, sample);
     pthread_mutex_unlock(buffer->elements_lock);

@@ -49,7 +49,7 @@ void update(void) {
     if (result == 0) { break; }
     else { printf("a: error code: %d\n", result); }
     if (tries >= mutex_attempts) { printf("a: unable to obtain lock!\n"); exit(EXIT_FAILURE); }
-    usleep(10);
+    usleep(1);
   }
 
   for (size_t tries = 0; tries <= mutex_attempts; tries++) {
@@ -57,7 +57,7 @@ void update(void) {
     if (result == 0) { break; }
     else { printf("error code: %d\n", result); }
     if (tries >= mutex_attempts) { printf("unable to obtain lock!\n"); exit(EXIT_FAILURE); }
-    usleep(10);
+    usleep(1);
   }
 
   memset(samples_drawable, 0, sizeof(TYPE) * sizeof_samples_drawable);
@@ -78,7 +78,7 @@ void update(void) {
     if (result == 0) { break; }
     else { printf("error code: %d\n", result); }
     if (tries >= mutex_attempts) { printf("unable to obtain lock!\n"); exit(EXIT_FAILURE); }
-    usleep(10);
+    usleep(1);
   }
 
   for (size_t j = 0; j < sizeof_samples_drawable; j++) {
@@ -90,7 +90,6 @@ void update(void) {
   }
   pthread_mutex_unlock(samples_drawable_lock);
   glEnd();
-
   glfwSwapBuffers(window);
   glfwPollEvents();
 }
@@ -120,6 +119,6 @@ int main(void) {
   glfwSetWindowSizeCallback(window, window_resize_callback);
   while (!glfwWindowShouldClose(window)) {
     update();
-    usleep(10);
+    usleep(1000);
   }
 }
