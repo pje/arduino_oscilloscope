@@ -1,4 +1,4 @@
-const int analogIn = 0;
+const int analogIn = A0;
 const int serialBaudRate = 9600;
 const int sample_production_rate_hertz = 900;
 const int voltage_max_value = 1024;
@@ -35,10 +35,11 @@ void send_voltage_sample(int voltage) {
 }
 
 void loop() {
-  a += 1;
-  a %= 1024;
+//  a += 1;
+//  a %= 1024;
 
-  int input_0_sample = (unsigned int)(((1 + sin((a / 1024.0) * (2 * pi))) / 2) * 1024.0);
+//  int input_0_sample = (unsigned int)(((1 + sin((a / 1024.0) * (2 * pi))) / 2) * 1024.0);
+  int input_0_sample = analogRead(analogIn);
   int samples[1] = { input_0_sample };
   send_frame(samples, 1);
 }

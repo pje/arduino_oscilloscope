@@ -24,6 +24,7 @@ void sample_producer_print_bytes(size_t size, void const * const ptr) {
 void *sample_producer_start(void *arg) {
   RingBuffer *buffer = (RingBuffer*)arg;
 
+  const size_t mutex_attempts = 100;
   int fd = -1;
   const char *port = "/dev/tty.usbserial-A600afNY";
   const int baudrate = 9600;
@@ -35,14 +36,14 @@ void *sample_producer_start(void *arg) {
   unsigned char *raw_samples = malloc(sizeof(unsigned char) * protocol_sample_frame_size);
   int read_result;
   unsigned char b[1];
-  int broken_attempts = 4;
+  int alignment_attempts = 4;
   while(b[0] != 0b11111111) { // just discard the first frame
     read_result = arduino_serial_port_read(fd, b, 1, sleep_micros);
-    if (--broken_attempts <= 0) { sample_producer_error("couldn't align bits!", fd); }
+    if (--alignment_attempts <= 0) { sample_producer_error("couldn't align bits!", fd); }
   }
 
   while(1) {
-    broken_attempts = 4;
+    alignment_attempts = 4;
     memset(raw_samples, 0, sizeof(unsigned char) * protocol_sample_frame_size);
     for (size_t i = 0; i < protocol_sample_frame_size; i++) {
       read_result = arduino_serial_port_read(fd, raw_samples + i, 1, sleep_micros);
@@ -54,15 +55,22 @@ void *sample_producer_start(void *arg) {
       raw_samples[0] = raw_samples[1];
       raw_samples[1] = raw_samples[2];
       read_result = arduino_serial_port_read(fd, raw_samples + 2, 1, sleep_micros);
-      if (--broken_attempts <= 0) { sample_producer_error("couldn't align bits!", fd); }
+      if (--alignment_attempts <= 0) { sample_producer_error("couldn't align bits!", fd); }
     }
 
-    unsigned short int sample_byte_1 = (unsigned short int) raw_samples[1];
-    unsigned short int sample_byte_0 = (unsigned short int) raw_samples[0];
+    unsigned short int sample_byte_1 = (unsigned short int) raw_samples[0];
+    unsigned short int sample_byte_0 = (unsigned short int) raw_samples[1];
     unsigned short int sample_voltage = ((unsigned short int)(sample_byte_1 << 5)) | sample_byte_0;
 
     TYPE sample = (TYPE)(sample_voltage / (TYPE)max_sample_value);
-    pthread_mutex_lock(buffer->elements_lock);
+
+    for (size_t tries = 0; tries <= mutex_attempts; tries++) {
+      int result = pthread_mutex_lock(buffer->elements_lock);
+      if (result == 0) { break; }
+      else { printf("error code: %d\n", result); }
+      if (tries >= mutex_attempts) { sample_producer_error("unable to obtain lock!", fd); }
+      usleep(10);
+    }
     ring_buffer_push(buffer, sample);
     pthread_mutex_unlock(buffer->elements_lock);
   }
