@@ -17,7 +17,6 @@ void update(void);
 void window_resize_callback(GLFWwindow* window, int width, int height);
 int main(void);
 
-unsigned long long i = 0;
 GLFWwindow* window;
 const size_t default_width = 512;
 const size_t default_height = 512;
