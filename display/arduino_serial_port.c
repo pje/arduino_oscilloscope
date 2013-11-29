@@ -69,12 +69,10 @@ int arduino_serial_port_read(int fd, unsigned char* buf, size_t buf_max, int sle
     switch(n) {
       case -1: {
         return(-1);
-        break;
       }
       case 0: {
         usleep(sleep_micros);
         continue;
-        break;
       }
       default: {
         break;
