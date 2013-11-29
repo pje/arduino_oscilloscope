@@ -7,7 +7,12 @@ const byte end_of_sample_frame_byte = 0b11111111;
 
 const float pi = 3.14159265359;
 
-void setup() {
+void setup(void);
+void send_frame(int *samples, size_t num_samples);
+void send_voltage_sample(int voltage);
+void loop(void);
+
+void setup(void) {
   Serial.begin(serialBaudRate);
 }
 
@@ -34,7 +39,7 @@ void send_voltage_sample(int voltage) {
   Serial.write(byte2);
 }
 
-void loop() {
+void loop(void) {
 //  a += 1;
 //  a %= 1024;
 
