@@ -128,9 +128,8 @@ int main(void) {
   glfwSetWindowSizeCallback(window, window_resize_callback);
   glfwSetFramebufferSizeCallback(window, window_resize_callback);
   glfwSwapInterval(1);
-  while (1) {
+  while (!glfwWindowShouldClose(window)) {
     update();
-    if (glfwWindowShouldClose(window)) { break; }
   }
   glfwTerminate();
   exit(EXIT_SUCCESS);
