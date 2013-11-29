@@ -56,7 +56,7 @@ int arduino_serial_port_init(const char* serial_port, int baud_rate) {
   return fd;
 }
 
-int arduino_serial_port_close( int fd ) {
+int arduino_serial_port_close(int fd) {
   return close(fd);
 }
 
