@@ -12,9 +12,9 @@
 #include "colors.h"
 
 static void error_callback(int error, const char* description);
-void initialize(void);
+static void initialize(void);
+static void window_resize_callback(GLFWwindow* window, int width, int height);
 void update(void);
-void window_resize_callback(GLFWwindow* window, int width, int height);
 int main(void);
 
 GLFWwindow* window;
@@ -34,7 +34,7 @@ static void error_callback(int error, const char* description) {
   fputs(description, stderr);
 }
 
-void initialize(void) {
+static void initialize(void) {
   samples_drawable_lock = (pthread_mutex_t*) malloc(sizeof(pthread_mutex_t));
   pthread_mutex_init(samples_drawable_lock, NULL);
   pthread_mutex_unlock(samples_drawable_lock);
@@ -97,7 +97,7 @@ void update(void) {
   glfwPollEvents();
 }
 
-void window_resize_callback(GLFWwindow* window, int width, int height) {
+static void window_resize_callback(GLFWwindow* window, int width, int height) {
   current_width = width;
   current_height = height;
   sizeof_samples_drawable = width;
