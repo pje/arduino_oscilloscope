@@ -71,19 +71,11 @@ int main(int argc, char *argv[]) {
   expected_buffer[4] = 1.0;
   expected_buffer[5] = 0.8;
 
-  printf("output_buffer: ");
-  printf("{ ");
-  for (int i = 0; i < 6; i++) {
-    printf("%f, ", output_buffer[i]);
-  }
-  printf(" }\n");
-
+  ring_buffer_inspect(buffer2);
+  printf("output_buffer  : ");
+  _buffer_inspect(output_buffer, 6);
   printf("expected_buffer: ");
-  printf("{ ");
-  for (int i = 0; i < 6; i++) {
-    printf("%f, ", expected_buffer[i]);
-  }
-  printf(" }\n");
+  _buffer_inspect(expected_buffer, 6);
 
   for (int i = 0; i < 6; i++) {
     assert(output_buffer[i] == expected_buffer[i]);
