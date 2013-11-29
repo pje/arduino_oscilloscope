@@ -7,8 +7,8 @@ MONITOR_PORT?=/dev/tty.usbserial-A600afNY
 
 include Arduino-Makefile/arduino-mk/Arduino.mk
 
-# Arduino-Makefile/arduino-mk/Arduino.mk:
-# 	git clone http://github.com/sudar/Arduino-Makefile
+Arduino-Makefile/arduino-mk/Arduino.mk:
+	git clone http://github.com/sudar/Arduino-Makefile
 
 reset:
 	stty -f $(MONITOR_PORT) -hupcl
