@@ -29,7 +29,7 @@ void *sample_producer_start(void *arg) {
   const char *port = "/dev/tty.usbserial-A600afNY";
   const int baudrate = 9600;
   const int max_sample_value = 1024;
-  const int sleep_micros = 1000;
+  const int sleep_micros = 10;
   fd = arduino_serial_port_init(port, baudrate);
   if (fd == -1) sample_producer_error("couldn't open port", fd);
   const size_t protocol_sample_frame_size = 3;
