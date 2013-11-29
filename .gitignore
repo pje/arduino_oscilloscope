@@ -6,3 +6,5 @@ display/main_test*
 display/ring_buffer_test
 display/tmp/*
 display/vendor/*
+input/build-*/
+input/Arduino-Makefile/
