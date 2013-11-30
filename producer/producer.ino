@@ -1,10 +1,7 @@
 const int analogIn = A0;
-const int sample_production_rate_hertz = 900;
 const int serialBaudRate = 28800;
 const int voltage_max_value = 1024;
 const byte end_of_sample_frame_byte = 0xff; // 0b11111111
-
-const float pi = 3.14159265359;
 
 void setup(void);
 void send_frame(int *samples, size_t num_samples);
