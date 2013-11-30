@@ -3,7 +3,7 @@ const int serialBaudRate = 9600;
 const int sample_production_rate_hertz = 900;
 const int voltage_max_value = 1024;
 unsigned int a = 0;
-const byte end_of_sample_frame_byte = 0b11111111;
+const byte end_of_sample_frame_byte = 0xff; // 0b11111111
 
 const float pi = 3.14159265359;
 
@@ -32,7 +32,7 @@ void send_voltage_sample(int voltage) {
   // assert(sizeof(unsigned short int) == 2);
   // assert(sizeof(unsigned char) == 1);
 
-  unsigned char byte1 = ((voltage >> 5 ) & 0b00011111);
+  unsigned char byte1 = ((voltage >> 5 ) & 0x1f); // 0b00011111
   unsigned char byte2 = ((unsigned short int)(voltage << 11)) >> 11;
 
   Serial.write(byte1);

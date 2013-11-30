@@ -37,7 +37,7 @@ void *signal_source_start(void *arg) {
   int read_result;
   unsigned char b[1];
   int alignment_attempts = 4;
-  while(b[0] != 0b11111111) { // just discard the first frame
+  while(b[0] != 0xff) { // just discard the first frame
     read_result = arduino_serial_port_read(fd, b, 1, sleep_micros);
     if (--alignment_attempts <= 0) { signal_source_error("couldn't align bits!", fd); }
   }
@@ -51,7 +51,7 @@ void *signal_source_start(void *arg) {
       if(read_result != 1) signal_source_error("read() read too many bytes?", fd);
     }
 
-    while(raw_samples[2] != 0b11111111) {
+    while(raw_samples[2] != 0xff) {
       raw_samples[0] = raw_samples[1];
       raw_samples[1] = raw_samples[2];
       read_result = arduino_serial_port_read(fd, raw_samples + 2, 1, sleep_micros);
