@@ -14,6 +14,7 @@
 static void error_callback(int error, const char* description);
 static void initialize(void);
 static void window_resize_callback(GLFWwindow* window, int width, int height);
+static void draw_waveform(void);
 void update(void);
 int main(void);
 
@@ -51,6 +52,13 @@ static void initialize(void) {
 }
 
 void update(void) {
+  glClear(GL_COLOR_BUFFER_BIT);
+  draw_waveform();
+  glfwSwapBuffers(window);
+  glfwPollEvents();
+}
+
+static void draw_waveform(void) {
   for (size_t tries = 0; tries <= mutex_attempts; tries++) {
     int result = pthread_mutex_lock(samples_drawable_lock);
     if (result == 0) { break; }
@@ -73,9 +81,9 @@ void update(void) {
   pthread_mutex_unlock(ring_buffer->elements_lock);
   pthread_mutex_unlock(samples_drawable_lock);
 
-  glClear(GL_COLOR_BUFFER_BIT);
   glClearColor(base3[0], base3[1], base3[2], base3[3]);
   glColor4fv(orange);
+  glLineWidth(1.0);
   glBegin(GL_LINE_STRIP);
 
   for (size_t tries = 0; tries <= mutex_attempts; tries++) {
@@ -94,16 +102,12 @@ void update(void) {
   }
   pthread_mutex_unlock(samples_drawable_lock);
   glEnd();
-  glfwSwapBuffers(window);
-  glfwPollEvents();
 }
 
 static void window_resize_callback(GLFWwindow* window, int width, int height) {
   current_width = width;
   current_height = height;
   sizeof_samples_drawable = width;
-  double ratio = (height/(double)width);
-
   for (size_t tries = 0; tries <= mutex_attempts; tries++) {
     int result = pthread_mutex_lock(samples_drawable_lock);
     if (result == 0) { break; }
@@ -111,10 +115,8 @@ static void window_resize_callback(GLFWwindow* window, int width, int height) {
     if (tries >= mutex_attempts) { printf("unable to obtain lock!\n"); exit(EXIT_FAILURE); }
   }
   pthread_mutex_unlock(samples_drawable_lock);
-
-  glViewport(0, 0, width, height);
+  glViewport(0, 0, current_width, current_height);
   glLoadIdentity();
-  gluPerspective(60.0, ratio, 1.0, 1024.0);
   glOrtho(0, current_width, 0, current_height, 0, 1);
   update();
 }
