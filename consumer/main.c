@@ -54,8 +54,8 @@ static void draw_waveform(void) {
     if (tries >= mutex_attempts) { printf("unable to obtain lock!\n"); exit(EXIT_FAILURE); }
   }
 
-  memset(samples_drawable, 0, sizeof(TYPE) * sizeof_samples_drawable);
-  for(size_t i = 0; i < sizeof_samples_drawable; i++){
+  memset(samples_drawable, 0, sizeof(TYPE) * current_width);
+  for(size_t i = 0; i < current_width; i++){
     TYPE sample = ring_buffer_get(ring_buffer, i);
     samples_drawable[i] = sample;
   }
@@ -74,8 +74,8 @@ static void draw_waveform(void) {
     if (tries >= mutex_attempts) { printf("unable to obtain lock!\n"); exit(EXIT_FAILURE); }
   }
 
-  for (size_t j = 0; j < sizeof_samples_drawable; j++) {
-    TYPE sample = samples_drawable[sizeof_samples_drawable - j];
+  for (size_t j = 0; j < current_width; j++) {
+    TYPE sample = samples_drawable[current_width - j];
     int gl_x_coord = j;
     int gl_y_coord = (int) round(sample * (double)current_height);
     if (gl_y_coord == 0) { gl_y_coord = 1.0; }
@@ -106,7 +106,6 @@ static void draw_grid(void) {
 static void window_resize_callback(GLFWwindow* window, int width, int height) {
   current_width = width;
   current_height = height;
-  sizeof_samples_drawable = width;
   for (size_t tries = 0; tries <= mutex_attempts; tries++) {
     int result = pthread_mutex_lock(samples_drawable_lock);
     if (result == 0) { break; }
