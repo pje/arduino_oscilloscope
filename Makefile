@@ -2,6 +2,12 @@ everything:
 	cd producer && $(MAKE) clean upload
 	cd consumer && $(MAKE) clean consumer run
 
+build: producer_build consumer_build
+
+clean: producer_clean consumer_clean
+
+run: producer_run consumer_run
+
 consumer_build:
 	cd consumer && $(MAKE) build
 
@@ -21,5 +27,5 @@ producer_run:
 	cd producer && $(MAKE) run
 
 
-.PHONY: consumer_build consumer_clean consumer_run producer_build producer_clean producer_run run
+.PHONY: build clean consumer_build consumer_clean consumer_run producer_build producer_clean producer_run run
 .DEFAULT: everything
