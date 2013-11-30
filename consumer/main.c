@@ -86,17 +86,16 @@ static void draw_waveform(void) {
 }
 
 static void draw_grid(void) {
-  unsigned short int dot_width = 2;
   glLineWidth(1.0);
   glColor4fv(base1);
   unsigned short int vertical_division_height = (int) round(current_height / (double)grid_divisions_vertical);
   for (size_t i = 0; i < (grid_divisions_vertical - 1); i++) {
     unsigned short int gl_y0_coord = vertical_division_height + (vertical_division_height * i);
     unsigned short int gl_y1_coord = gl_y0_coord;
-    for (size_t j = 0; j < current_width; j+=(dot_width + 1)) {
+    for (size_t j = 0; j < current_width; j+=(grid_dot_width + 1)) {
       glBegin(GL_LINE_STRIP);
       unsigned short int gl_x0_coord = j;
-      unsigned short int gl_x1_coord = j+dot_width;
+      unsigned short int gl_x1_coord = j+grid_dot_width;
       glVertex2i(gl_x0_coord, gl_y0_coord);
       glVertex2i(gl_x1_coord, gl_y1_coord);
       glEnd();

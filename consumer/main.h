@@ -17,7 +17,8 @@ static size_t sizeof_ring_buffer = 2048;
 static pthread_mutex_t *samples_drawable_lock;
 static pthread_t *producer_thread;
 static const size_t mutex_attempts = 100;
-static const size_t grid_divisions_vertical = 5;
+static const unsigned short int grid_divisions_vertical = 5;
+static const unsigned short int grid_dot_width = 2;
 
 static void error_callback(int error, const char* description);
 static void initialize(void);
