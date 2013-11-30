@@ -14,6 +14,7 @@
 static void error_callback(int error, const char* description);
 static void initialize(void);
 static void window_resize_callback(GLFWwindow* window, int width, int height);
+static void draw_grid(void);
 static void draw_waveform(void);
 void update(void);
 int main(void);
@@ -31,6 +32,7 @@ static size_t sizeof_samples_drawable = default_window_width;
 static pthread_mutex_t *samples_drawable_lock;
 static pthread_t *producer_thread;
 static const size_t mutex_attempts = 100;
+static const size_t grid_divisions_vertical = 5;
 
 static void error_callback(int error, const char* description) {
   fputs(description, stderr);
@@ -53,6 +55,7 @@ static void initialize(void) {
 
 void update(void) {
   glClear(GL_COLOR_BUFFER_BIT);
+  draw_grid();
   draw_waveform();
   glfwSwapBuffers(window);
   glfwPollEvents();
@@ -102,6 +105,25 @@ static void draw_waveform(void) {
   }
   pthread_mutex_unlock(samples_drawable_lock);
   glEnd();
+}
+
+static void draw_grid(void) {
+  int dot_width = 2;
+  glLineWidth(1.0);
+  glColor4fv(base1);
+  int vertical_division_height = (int) round(current_height / (double)grid_divisions_vertical);
+  for (size_t i = 0; i < (grid_divisions_vertical - 1); i++) {
+    int gl_y0_coord = vertical_division_height + (vertical_division_height * i);
+    int gl_y1_coord = gl_y0_coord;
+    for (size_t j = 0; j < current_width; j+=(dot_width + 1)) {
+      glBegin(GL_LINE_STRIP);
+      int gl_x0_coord = j;
+      int gl_x1_coord = j+dot_width;
+      glVertex2i(gl_x0_coord, gl_y0_coord);
+      glVertex2i(gl_x1_coord, gl_y1_coord);
+      glEnd();
+    }
+  }
 }
 
 static void window_resize_callback(GLFWwindow* window, int width, int height) {
