@@ -10,10 +10,10 @@
 
 void signal_source_print_bytes(size_t size, void const * const ptr) {
   unsigned char *b = (unsigned char*) ptr;
-  for (int i = size - 1; i >= 0; i--) {
-    for (int j = 7; j >= 0; j--) {
-      unsigned char byte = b[i] & (1 << j);
-      byte >>= j;
+  for (size_t i = size; i > 0; i--) {
+    for (size_t j = 8; j > 0; j--) {
+      unsigned char byte = b[i - 1] & (1 << (j - 1));
+      byte >>= (j - 1);
       printf("%u", byte);
     }
     printf(" ");
@@ -23,7 +23,6 @@ void signal_source_print_bytes(size_t size, void const * const ptr) {
 
 void *signal_source_start(void *arg) {
   RingBuffer *buffer = (RingBuffer*)arg;
-
   const size_t mutex_attempts = 100;
   int fd = -1;
   const char *port = "/dev/tty.usbserial-A600afNY";
@@ -34,7 +33,7 @@ void *signal_source_start(void *arg) {
   if (fd == -1) signal_source_error("couldn't open port", fd);
   const size_t protocol_sample_frame_size = 3;
   unsigned char *raw_samples = malloc(sizeof(unsigned char) * protocol_sample_frame_size);
-  int read_result;
+  ssize_t read_result;
   unsigned char b[1];
   int alignment_attempts = 4;
   while(b[0] != 0xff) { // just discard the first frame
