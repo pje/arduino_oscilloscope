@@ -26,7 +26,7 @@ void *signal_source_start(void *arg) {
   const size_t mutex_attempts = 100;
   int fd = -1;
   const char *port = "/dev/tty.usbserial-A600afNY";
-  const int baudrate = 9600;
+  const int baudrate = 28800;
   const int max_sample_value = 1024;
   const int sleep_micros = 1000;
   fd = arduino_serial_port_init(port, baudrate);

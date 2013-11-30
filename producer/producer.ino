@@ -1,6 +1,6 @@
 const int analogIn = A0;
-const int serialBaudRate = 9600;
 const int sample_production_rate_hertz = 900;
+const int serialBaudRate = 28800;
 const int voltage_max_value = 1024;
 const byte end_of_sample_frame_byte = 0xff; // 0b11111111
 
