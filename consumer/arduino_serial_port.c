@@ -7,7 +7,7 @@
 #include <sys/ioctl.h>
 #include "arduino_serial_port.h"
 
-int arduino_serial_port_init(const char* serial_port, int baud_rate) {
+int arduino_serial_port_init(const char* serial_port, size_t baud_rate) {
   int fd = -1;
   struct termios toptions;
 
@@ -60,12 +60,12 @@ int arduino_serial_port_close(int fd) {
   return close(fd);
 }
 
-int arduino_serial_port_read(int fd, unsigned char* buf, size_t buf_max, int sleep_micros) {
+ssize_t arduino_serial_port_read(int fd, unsigned char* buf, size_t buf_max, unsigned int sleep_micros) {
   unsigned char b[1];
   size_t i = 0;
-  size_t bytes_read = 0;
+  ssize_t bytes_read = 0;
   while (i < buf_max) {
-    int n = read(fd, b, 1);
+    ssize_t n = read(fd, b, 1);
     switch(n) {
       case -1: {
         return(-1);
