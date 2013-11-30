@@ -8,7 +8,7 @@
 #include <unistd.h>
 #include <math.h>
 #include "ring_buffer.h"
-#include "sample_producer.h"
+#include "signal_source.h"
 #include "colors.h"
 
 static void error_callback(int error, const char* description);
@@ -25,7 +25,7 @@ static size_t current_height = default_height;
 static RingBuffer *ring_buffer;
 static TYPE *samples_drawable;
 static size_t sizeof_samples_drawable = default_width;
-static size_t sizeof_ring_buffer = 2048;
+static size_t sizeof_ring_buffer = 1024;
 static pthread_mutex_t *samples_drawable_lock;
 static pthread_t *producer_thread;
 static const size_t mutex_attempts = 100;
@@ -41,7 +41,7 @@ static void initialize(void) {
   samples_drawable = (TYPE*) calloc(sizeof_samples_drawable, sizeof(TYPE));
   ring_buffer = ring_buffer_init(sizeof_ring_buffer);
   producer_thread = malloc(sizeof(pthread_t));
-  pthread_create(producer_thread, NULL, sample_producer_start, ring_buffer);
+  pthread_create(producer_thread, NULL, signal_source_start, ring_buffer);
   if (!glfwInit()) { exit(EXIT_FAILURE); }
   window = glfwCreateWindow(default_width, default_height, "oscilloscope", NULL, NULL);
   if (!window) { glfwTerminate(); exit(EXIT_FAILURE); }
