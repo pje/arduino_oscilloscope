@@ -75,7 +75,7 @@ void *signal_source_start(void *arg) {
   }
 }
 
-void signal_source_error(char* msg, int fd) {
+_Noreturn void signal_source_error(char* msg, int fd) {
   fprintf(stderr, "%s\n",msg);
   if (fd > 0) { arduino_serial_port_close(fd); }
   exit(EXIT_FAILURE);
