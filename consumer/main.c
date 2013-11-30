@@ -18,6 +18,7 @@ void update(void);
 int main(void);
 
 static GLFWwindow* window;
+static const size_t max_window_width = 2048;
 static const size_t default_window_width = 512;
 static const size_t default_window_height = 512;
 static size_t current_width = default_window_width;
@@ -38,7 +39,7 @@ static void initialize(void) {
   samples_drawable_lock = (pthread_mutex_t*) malloc(sizeof(pthread_mutex_t));
   pthread_mutex_init(samples_drawable_lock, NULL);
   pthread_mutex_unlock(samples_drawable_lock);
-  samples_drawable = (TYPE*) calloc(sizeof_samples_drawable, sizeof(TYPE));
+  samples_drawable = (TYPE*) calloc(max_window_width, sizeof(TYPE));
   ring_buffer = ring_buffer_init(sizeof_ring_buffer);
   producer_thread = malloc(sizeof(pthread_t));
   pthread_create(producer_thread, NULL, signal_source_start, ring_buffer);
@@ -109,10 +110,6 @@ static void window_resize_callback(GLFWwindow* window, int width, int height) {
     else { printf("error code: %d\n", result); }
     if (tries >= mutex_attempts) { printf("unable to obtain lock!\n"); exit(EXIT_FAILURE); }
   }
-
-  if (samples_drawable) { free(samples_drawable); }
-  samples_drawable = (TYPE*) malloc(sizeof_samples_drawable * sizeof(TYPE));
-  memset(samples_drawable, 0.5, sizeof(TYPE) * sizeof_samples_drawable);
   pthread_mutex_unlock(samples_drawable_lock);
 
   glViewport(0, 0, width, height);
