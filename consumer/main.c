@@ -74,8 +74,8 @@ void update(void) {
   pthread_mutex_unlock(samples_drawable_lock);
 
   glClear(GL_COLOR_BUFFER_BIT);
-  glClearColor(base03[0], base03[1], base03[2], base03[3]);
-  glColor4fv(yellow);
+  glClearColor(base3[0], base3[1], base3[2], base3[3]);
+  glColor4fv(orange);
   glBegin(GL_LINE_STRIP);
 
   for (size_t tries = 0; tries <= mutex_attempts; tries++) {
