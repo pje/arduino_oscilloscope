@@ -78,6 +78,7 @@ static void draw_waveform(void) {
   }
 
   for (size_t j = 0; j < current_width; j++) {
+    if (j == 0) { continue; }
     TYPE sample = samples_drawable[current_width - j];
     double gl_x_coord = j;
     double gl_y_coord = sample * current_height;
