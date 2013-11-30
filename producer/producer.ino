@@ -2,7 +2,6 @@ const int analogIn = A0;
 const int serialBaudRate = 9600;
 const int sample_production_rate_hertz = 900;
 const int voltage_max_value = 1024;
-unsigned int a = 0;
 const byte end_of_sample_frame_byte = 0xff; // 0b11111111
 
 const float pi = 3.14159265359;
@@ -24,13 +23,13 @@ void send_frame(int *samples, size_t num_samples) {
 }
 
 void send_voltage_sample(int voltage) {
-  // voltage : 00000010 10111111
-  // byte1   :          00010101
-  // byte2   :          00011111
-
   // assert(CHAR_BIT == 8);
   // assert(sizeof(unsigned short int) == 2);
   // assert(sizeof(unsigned char) == 1);
+  //
+  // voltage : 00000010 10111111
+  // byte1   :          00010101
+  // byte2   :          00011111
 
   unsigned char byte1 = ((voltage >> 5 ) & 0x1f); // 0b00011111
   unsigned char byte2 = ((unsigned short int)(voltage << 11)) >> 11;
@@ -40,10 +39,6 @@ void send_voltage_sample(int voltage) {
 }
 
 void loop(void) {
-//  a += 1;
-//  a %= 1024;
-
-//  int input_0_sample = (unsigned int)(((1 + sin((a / 1024.0) * (2 * pi))) / 2) * 1024.0);
   int input_0_sample = analogRead(analogIn);
   int samples[1] = { input_0_sample };
   send_frame(samples, 1);
