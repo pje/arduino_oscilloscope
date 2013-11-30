@@ -1,4 +1,4 @@
-ARDUINO_DIR?=/Users/patrickellis/Applications/Arduino.app/Contents/Resources/Java
+ARDUINO_DIR?=$(HOME)/Applications/Arduino.app/Contents/Resources/Java
 ARDMK_DIR=$(CURDIR)/Arduino-Makefile
 ARDMK_PATH=$(CURDIR)/Arduino-Makefile/bin
 ARDUINO_LIBS=

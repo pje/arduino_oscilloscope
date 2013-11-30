@@ -18,7 +18,7 @@ consumer_run:
 	cd consumer && $(MAKE) run
 
 producer_build:
-	cd producer && $(MAKE) build
+	cd producer && $(MAKE) upload
 
 producer_clean:
 	cd producer && $(MAKE) clean
