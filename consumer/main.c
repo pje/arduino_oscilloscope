@@ -18,14 +18,14 @@ void update(void);
 int main(void);
 
 static GLFWwindow* window;
-static const size_t default_width = 512;
-static const size_t default_height = 512;
-static size_t current_width = default_width;
-static size_t current_height = default_height;
+static const size_t default_window_width = 512;
+static const size_t default_window_height = 512;
+static size_t current_width = default_window_width;
+static size_t current_height = default_window_height;
 static RingBuffer *ring_buffer;
 static TYPE *samples_drawable;
-static size_t sizeof_samples_drawable = default_width;
 static size_t sizeof_ring_buffer = 1024;
+static size_t sizeof_samples_drawable = default_window_width;
 static pthread_mutex_t *samples_drawable_lock;
 static pthread_t *producer_thread;
 static const size_t mutex_attempts = 100;
@@ -43,7 +43,7 @@ static void initialize(void) {
   producer_thread = malloc(sizeof(pthread_t));
   pthread_create(producer_thread, NULL, signal_source_start, ring_buffer);
   if (!glfwInit()) { exit(EXIT_FAILURE); }
-  window = glfwCreateWindow(default_width, default_height, "oscilloscope", NULL, NULL);
+  window = glfwCreateWindow(default_window_width, default_window_height, "oscilloscope", NULL, NULL);
   if (!window) { glfwTerminate(); exit(EXIT_FAILURE); }
   glfwMakeContextCurrent(window);
   glOrtho(0, current_width, 0, current_height, 0, 1);
