@@ -31,6 +31,7 @@ static void initialize(void) {
   main_window = glfwCreateWindow(default_window_width, default_window_height, "oscilloscope", NULL, NULL);
   if (!main_window) { glfwTerminate(); exit(EXIT_FAILURE); }
   glfwMakeContextCurrent(main_window);
+  glDisable(GL_DEPTH_TEST);
   glOrtho(0, current_width, 0, current_height, 0, 1);
 }
 
