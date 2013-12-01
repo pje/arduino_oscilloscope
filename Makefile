@@ -2,29 +2,29 @@ everything:
 	cd producer && $(MAKE) clean upload
 	cd consumer && $(MAKE) clean consumer run
 
-build: producer_build consumer_build
+build: build_producer build_consumer
 
-clean: producer_clean consumer_clean
+clean: clean_producer clean_consumer
 
-run: producer_run consumer_run
+run: run_producer run_consumer
 
-consumer_build:
+build_consumer:
 	cd consumer && $(MAKE) build
 
-consumer_clean:
+clean_consumer:
 	cd consumer && $(MAKE) clean
 
-consumer_run:
+run_consumer:
 	cd consumer && $(MAKE) run
 
-producer_build:
+build_producer:
 	cd producer && $(MAKE) upload
 
-producer_clean:
+clean_producer:
 	cd producer && $(MAKE) clean
 
-producer_run:
+run_producer:
 	cd producer && $(MAKE) run
 
-.PHONY: build clean consumer_build consumer_clean consumer_run producer_build producer_clean producer_run run
+.PHONY: build clean build_consumer clean_consumer run_consumer build_producer clean_producer run_producer run
 .DEFAULT: everything
