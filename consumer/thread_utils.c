@@ -3,6 +3,6 @@
 #include "thread_utils.h"
 
 void nanosecond_sleep(void) {
-  const struct timespec nano_struct = { 0, 1 };
-  nanosleep(&nano_struct, NULL);
+    const struct timespec nano_struct = { 0, 1 };
+    nanosleep(&nano_struct, NULL);
 }

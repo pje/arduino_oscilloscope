@@ -6,10 +6,10 @@
 #define TYPE double
 
 typedef struct RingBuffer {
-  TYPE *elements;
-  size_t size;
-  size_t head_index;
-  pthread_mutex_t *elements_lock;
+    TYPE *elements;
+    size_t size;
+    size_t head_index;
+    pthread_mutex_t *elements_lock;
 } RingBuffer;
 
 RingBuffer *ring_buffer_init(size_t size);
