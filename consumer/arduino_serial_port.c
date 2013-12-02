@@ -10,14 +10,12 @@
 int arduino_serial_port_init(const char* serial_port, size_t baud_rate) {
   int fd = -1;
   struct termios toptions;
-
   fd = open(serial_port, O_RDWR | O_NOCTTY | O_NDELAY);
   if (fd == -1)  {
     perror("arduino_serial_port_init: Unable to open port");
     perror(serial_port);
     return -1;
   }
-
   if (tcgetattr(fd, &toptions) < 0) {
     perror("arduino_serial_port_init: Couldn't get term attributes");
     return -1;
@@ -35,7 +33,6 @@ int arduino_serial_port_init(const char* serial_port, size_t baud_rate) {
   }
   cfsetispeed(&toptions, brate);
   cfsetospeed(&toptions, brate);
-
   toptions.c_cflag &= ~PARENB;
   toptions.c_cflag &= ~CSTOPB;
   toptions.c_cflag &= ~CSIZE;
@@ -47,7 +44,6 @@ int arduino_serial_port_init(const char* serial_port, size_t baud_rate) {
   toptions.c_oflag &= ~OPOST;
   toptions.c_cc[VMIN]  = 0;
   toptions.c_cc[VTIME] = 0;
-
   tcsetattr(fd, TCSANOW, &toptions);
   if (tcsetattr(fd, TCSAFLUSH, &toptions) < 0) {
     perror("arduino_serial_port_init: Couldn't set term attributes");
