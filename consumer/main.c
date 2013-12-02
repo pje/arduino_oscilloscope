@@ -1,4 +1,5 @@
 #define GLFW_INCLUDE_GLU
+
 #include "GLFW/glfw3.h"
 #include <stdlib.h>
 #include <stdio.h>
@@ -11,6 +12,7 @@
 #include "signal_source.h"
 #include "colors.h"
 #include "main.h"
+#include "thread_utils.h"
 
 #define EPSILON 0.0000001
 
@@ -28,7 +30,7 @@ static void initialize(void) {
   producer_thread = malloc(sizeof(pthread_t));
   pthread_create(producer_thread, NULL, signal_source_start, ring_buffer);
   if (!glfwInit()) { exit(EXIT_FAILURE); }
-  main_window = glfwCreateWindow(default_window_width, default_window_height, "oscilloscope", NULL, NULL);
+  main_window = glfwCreateWindow(default_window_width, default_window_height, default_window_title, NULL, NULL);
   if (!main_window) { glfwTerminate(); exit(EXIT_FAILURE); }
   glfwMakeContextCurrent(main_window);
   glDisable(GL_DEPTH_TEST);
@@ -44,19 +46,8 @@ void update(void) {
 }
 
 static void draw_waveform(void) {
-  for (size_t tries = 0; tries <= mutex_attempts; tries++) {
-    int result = pthread_mutex_lock(samples_drawable_lock);
-    if (result == 0) { break; }
-    else { printf("a: error code: %d\n", result); }
-    if (tries >= mutex_attempts) { printf("a: unable to obtain lock!\n"); exit(EXIT_FAILURE); }
-  }
-
-  for (size_t tries = 0; tries <= mutex_attempts; tries++) {
-    int result = pthread_mutex_lock(ring_buffer->elements_lock);
-    if (result == 0) { break; }
-    else { printf("error code: %d\n", result); }
-    if (tries >= mutex_attempts) { printf("unable to obtain lock!\n"); exit(EXIT_FAILURE); }
-  }
+  while (pthread_mutex_trylock(samples_drawable_lock) != 0) { nanosecond_sleep(); }
+  while (pthread_mutex_trylock(ring_buffer->elements_lock) != 0) { nanosecond_sleep(); }
 
   memset(samples_drawable, 0, sizeof(TYPE) * current_width);
   for(size_t i = 0; i < current_width; i++){
@@ -71,12 +62,7 @@ static void draw_waveform(void) {
   glLineWidth(1.0);
   glBegin(GL_LINE_STRIP);
 
-  for (size_t tries = 0; tries <= mutex_attempts; tries++) {
-    int result = pthread_mutex_lock(samples_drawable_lock);
-    if (result == 0) { break; }
-    else { printf("error code: %d\n", result); }
-    if (tries >= mutex_attempts) { printf("unable to obtain lock!\n"); exit(EXIT_FAILURE); }
-  }
+  while (pthread_mutex_trylock(samples_drawable_lock) != 0) { nanosecond_sleep(); }
 
   for (size_t j = 0; j < current_width; j++) {
     if (j == 0) { continue; }
@@ -111,12 +97,7 @@ static void draw_grid(void) {
 static void window_resize_callback(GLFWwindow* window, int width, int height) {
   current_width = width;
   current_height = height;
-  for (size_t tries = 0; tries <= mutex_attempts; tries++) {
-    int result = pthread_mutex_lock(samples_drawable_lock);
-    if (result == 0) { break; }
-    else { printf("error code: %d\n", result); }
-    if (tries >= mutex_attempts) { printf("unable to obtain lock!\n"); exit(EXIT_FAILURE); }
-  }
+  while (pthread_mutex_trylock(samples_drawable_lock) != 0) { nanosecond_sleep(); }
   pthread_mutex_unlock(samples_drawable_lock);
   glViewport(0, 0, current_width, current_height);
   glLoadIdentity();

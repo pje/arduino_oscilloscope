@@ -1,7 +1,7 @@
 PROJECT_ROOT=$(CURDIR)
 NAME=consumer
-SOURCES=arduino_serial_port.c ring_buffer.c signal_source.c
-HEADERS=arduino_serial_port.h ring_buffer.h signal_source.h colors.h main.h
+SOURCES=arduino_serial_port.c ring_buffer.c signal_source.c thread_utils.c
+HEADERS=arduino_serial_port.h ring_buffer.h signal_source.h thread_utils.h colors.h main.h
 MAIN=main.c
 TARGET=$(NAME)
 CC=clang-3.3

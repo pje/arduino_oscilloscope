@@ -7,6 +7,7 @@
 #include "signal_source.h"
 #include "ring_buffer.h"
 #include "arduino_serial_port.h"
+#include "thread_utils.h"
 
 void signal_source_print_bytes(size_t size, void const * const ptr) {
   unsigned char *b = (unsigned char*) ptr;
@@ -23,7 +24,6 @@ void signal_source_print_bytes(size_t size, void const * const ptr) {
 
 void *signal_source_start(void *arg) {
   RingBuffer *buffer = (RingBuffer*)arg;
-  const size_t mutex_attempts = 100;
   int fd = -1;
   const char *port = "/dev/tty.usbserial-A600afNY";
   const int baudrate = 28800;
@@ -63,12 +63,7 @@ void *signal_source_start(void *arg) {
 
     TYPE sample = (TYPE)(sample_voltage / (TYPE)max_sample_value);
 
-    for (size_t tries = 0; tries <= mutex_attempts; tries++) {
-      int result = pthread_mutex_lock(buffer->elements_lock);
-      if (result == 0) { break; }
-      else { printf("error code: %d\n", result); }
-      if (tries >= mutex_attempts) { signal_source_error("unable to obtain lock!", fd); }
-    }
+    while (pthread_mutex_trylock(buffer->elements_lock) != 0) { nanosecond_sleep(); }
     ring_buffer_push(buffer, sample);
     pthread_mutex_unlock(buffer->elements_lock);
   }
