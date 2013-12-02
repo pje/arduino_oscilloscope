@@ -78,7 +78,7 @@ static void draw_waveform(void) {
 
 static void draw_grid(void) {
   glLineWidth(1.0);
-  glColor4fv(base1);
+  glColor4fv(base2);
   size_t vertical_division_height = (int) round(current_height / (double)grid_divisions_vertical);
   for (size_t i = 0; i < (grid_divisions_vertical - 1); i++) {
     size_t gl_y0_coord = vertical_division_height + (vertical_division_height * i);
