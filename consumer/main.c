@@ -97,8 +97,6 @@ static void draw_grid(void) {
 static void window_resize_callback(GLFWwindow* window, int width, int height) {
   current_width = width;
   current_height = height;
-  while (pthread_mutex_trylock(samples_drawable_lock) != 0) { nanosecond_sleep(); }
-  pthread_mutex_unlock(samples_drawable_lock);
   glViewport(0, 0, current_width, current_height);
   glLoadIdentity();
   glOrtho(0, current_width, 0, current_height, 0, 1);
