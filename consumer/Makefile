@@ -5,7 +5,7 @@ HEADERS=arduino_serial_port.h ring_buffer.h signal_source.h thread_utils.h color
 MAIN=main.c
 TARGET=$(NAME)
 CLANG=clang-3.3
-CFLAGS= -Wall -std=c11 -g -O0 -fblocks $(shell pkg-config --cflags glfw3)
+CFLAGS= -Wall -std=c11 -g -O0 $(shell pkg-config --cflags glfw3)
 LFLAGS= $(shell pkg-config --static --libs glfw3)
 
 build: $(TARGET)
