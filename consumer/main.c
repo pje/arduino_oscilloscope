@@ -33,24 +33,31 @@ static void crash_handler(int sig) {
   exit(1);
 }
 
+static void scroll_callback(GLFWwindow *window, double xpos, double ypos) {
+    ypos *= scroll_to_zoom_translation_factor;
+    if (ypos > 0) {
+        new_display_zoom = MIN(display_zoom + ypos, max_display_zoom);
+    } else if (ypos < 0) {
+        new_display_zoom = MAX(display_zoom + ypos, min_display_zoom);
+    }
+    if (new_display_zoom != display_zoom) { event_flag_zoomed = 1; }
+}
+
 static void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods) {
-    if (action != GLFW_PRESS) {
+    if ((action != GLFW_RELEASE) && (action != GLFW_REPEAT)) {
         return;
     }
     switch (key) {
     case GLFW_KEY_UP:
-        display_zoom = MIN(display_zoom + 0.1, 3.9);
-        printf("zoom: %f\n", display_zoom);
-        update();
+        new_display_zoom = MIN(display_zoom + 0.1, max_display_zoom);
         break;
     case GLFW_KEY_DOWN:
-        display_zoom = MAX(display_zoom - 0.1, 0.1);
-        printf("zoom: %f\n", display_zoom);
-        update();
+        new_display_zoom = MAX(display_zoom - 0.1, min_display_zoom);
         break;
     default:
         break;
     }
+    if (new_display_zoom != display_zoom) { event_flag_zoomed = 1; }
 }
 
 static void initialize(void) {
@@ -135,16 +142,8 @@ static void draw_grid(void) {
 
 static void window_resize_callback(GLFWwindow* window, int width, int height) {
     event_flag_resized = 1;
-    current_width = width;
-    current_height = height;
-}
-
-static void resize(GLFWwindow* window, int width, int height) {
-    if (grid_index) {
-        glDeleteLists(grid_index, 1);
-    }
-    set_gl_view(current_width, current_height);
-    initialize_grid();
+    new_width = width;
+    new_height = height;
 }
 
 static void set_gl_view(int width, int height) {
@@ -186,10 +185,19 @@ int main(void) {
     glfwSetWindowSizeCallback(main_window, window_resize_callback);
     glfwSetFramebufferSizeCallback(main_window, window_resize_callback);
     glfwSetKeyCallback(main_window, key_callback);
+    glfwSetScrollCallback(main_window, scroll_callback);
     while (!glfwWindowShouldClose(main_window)) {
         if (event_flag_resized) {
-            resize(main_window, current_width, current_height);
+            current_width = new_width;
+            current_height = new_height;
+            if (grid_index) { glDeleteLists(grid_index, 1); }
+            set_gl_view(current_width, current_height);
+            initialize_grid();
             event_flag_resized = 0;
+        }
+        if (event_flag_zoomed) {
+            display_zoom = new_display_zoom;
+            event_flag_zoomed = 0;
         }
         redraw();
         glfwPollEvents();

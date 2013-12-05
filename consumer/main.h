@@ -10,20 +10,26 @@ const size_t grid_dot_stride = 2;
 
 GLFWwindow* main_window = NULL;
 const char *default_window_title = "oscilloscope";
-const size_t max_window_width = 2048;
-const size_t default_window_width = 512;
-const size_t default_window_height = default_window_width;
+const unsigned int max_window_width = 2048;
+const unsigned int default_window_width = 512;
+const unsigned int default_window_height = default_window_width;
+const double max_display_zoom = 3.9;
+const double min_display_zoom = 0.1;
+const double scroll_to_zoom_translation_factor = 0.1;
 double display_zoom = 1.0;
-size_t current_width = default_window_width;
-size_t current_height = default_window_height;
-
-size_t sizeof_ring_buffer = max_window_width;
+unsigned int current_width = default_window_width;
+unsigned int current_height = default_window_height;
+unsigned int sizeof_ring_buffer = max_window_width;
 RingBuffer *ring_buffer = NULL;
 TYPE *samples_drawable = NULL;
 pthread_mutex_t *samples_drawable_lock = NULL;
 pthread_t *producer_thread = NULL;
 
 volatile sig_atomic_t event_flag_resized = 0;
+volatile sig_atomic_t new_width = 512;
+volatile sig_atomic_t new_height = 512;
+volatile sig_atomic_t event_flag_zoomed = 0;
+volatile double new_display_zoom = 1.0;
 
 int grid_index = 0;
 
