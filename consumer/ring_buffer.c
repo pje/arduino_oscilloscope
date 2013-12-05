@@ -33,12 +33,6 @@ void ring_buffer_free(RingBuffer *buffer) {
     free(buffer);
 }
 
-TYPE ring_buffer_pop(RingBuffer *buffer) {
-    TYPE element = buffer->elements[buffer->head_index];
-    buffer->head_index = buffer->head_index == (buffer->size - 1) ? 0 : buffer->head_index + 1;
-    return element;
-}
-
 TYPE ring_buffer_get(const RingBuffer *buffer, size_t index) {
     TYPE element = buffer->elements[(buffer->head_index + index) % buffer->size];
     return element;

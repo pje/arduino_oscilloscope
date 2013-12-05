@@ -18,16 +18,9 @@ int main(int argc, char *argv[]) {
     ring_buffer_push(buffer, 0.6);
 
     assert(fabs(ring_buffer_get(buffer, 0) - 0.6) < EPSILON);
-    assert(fabs(ring_buffer_pop(buffer) - 0.6) < EPSILON);
-
-    assert(fabs(ring_buffer_get(buffer, 0) - 0.5) < EPSILON);
-    assert(fabs(ring_buffer_pop(buffer) - 0.5) < EPSILON);
-
-    assert(fabs(ring_buffer_get(buffer, 0) - 0.4) < EPSILON);
-    assert(fabs(ring_buffer_pop(buffer) - 0.4) < EPSILON);
-
-    assert(fabs(ring_buffer_get(buffer, 0) - 0.3) < EPSILON);
-    assert(fabs(ring_buffer_pop(buffer) - 0.3) < EPSILON);
+    assert(fabs(ring_buffer_get(buffer, 1) - 0.5) < EPSILON);
+    assert(fabs(ring_buffer_get(buffer, 2) - 0.4) < EPSILON);
+    assert(fabs(ring_buffer_get(buffer, 3) - 0.3) < EPSILON);
 
     ring_buffer_free(buffer);
 
@@ -70,12 +63,6 @@ int main(int argc, char *argv[]) {
     expected_buffer[3] = 2.0;
     expected_buffer[4] = 1.0;
     expected_buffer[5] = 0.8;
-
-    ring_buffer_inspect(buffer2);
-    printf("output_buffer  : ");
-    _buffer_inspect(output_buffer, 6);
-    printf("expected_buffer: ");
-    _buffer_inspect(expected_buffer, 6);
 
     for (int i = 0; i < 6; i++) {
         assert(output_buffer[i] == expected_buffer[i]);
