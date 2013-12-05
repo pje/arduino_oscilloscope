@@ -55,6 +55,10 @@ int main(int argc, char *argv[]) {
     ring_buffer_push(buffer2, 5.0);
 
     output_buffer = calloc(6, sizeof(TYPE));
+
+    int return_value = ring_buffer_get_n(buffer2, 7, output_buffer);
+    assert(return_value == -1);
+
     ring_buffer_get_n(buffer2, 6, output_buffer);
     expected_buffer = calloc(6, sizeof(TYPE));
     expected_buffer[0] = 5.0;
