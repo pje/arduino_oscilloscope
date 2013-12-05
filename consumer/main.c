@@ -21,14 +21,21 @@ static void error_callback(int error, const char* description) {
     printf("error number: %d\n", error);
 }
 
+#include <execinfo.h>
+static void crash_handler(int sig) {
+  void *array[10];
+  size_t size;
+  size = backtrace(array, 10);
+  fprintf(stderr, "Error: signal %d:\n", sig);
+  backtrace_symbols_fd(array, size, STDERR_FILENO);
+  exit(1);
+}
+
 static void initialize(void) {
     samples_drawable_lock = (pthread_mutex_t*) malloc(sizeof(pthread_mutex_t));
     pthread_mutex_init(samples_drawable_lock, NULL);
-    pthread_mutex_unlock(samples_drawable_lock);
     samples_drawable = (TYPE*) calloc(max_window_width, sizeof(TYPE));
     ring_buffer = ring_buffer_init(sizeof_ring_buffer);
-    producer_thread = malloc(sizeof(pthread_t));
-    pthread_create(producer_thread, NULL, signal_source_start, ring_buffer);
     if (!glfwInit()) {
         exit(EXIT_FAILURE);
     }
@@ -39,15 +46,18 @@ static void initialize(void) {
     }
     glfwMakeContextCurrent(main_window);
     glDisable(GL_DEPTH_TEST);
-    glOrtho(0, current_width, 0, current_height, 0, 1);
+    set_gl_view(current_width, current_height);
+    initialize_grid();
+    glfwSwapInterval(1);
+    producer_thread = malloc(sizeof(pthread_t));
+    pthread_create(producer_thread, NULL, signal_source_start, ring_buffer);
 }
 
-void update(void) {
+static void redraw(void) {
     glClear(GL_COLOR_BUFFER_BIT);
     draw_grid();
     draw_waveform();
     glfwSwapBuffers(main_window);
-    glfwPollEvents();
 }
 
 static void draw_waveform(void) {
@@ -94,38 +104,68 @@ static void draw_waveform(void) {
 static void draw_grid(void) {
     glLineWidth(1.0);
     glColor4fv(base2);
-    size_t vertical_division_height = (int) round(current_height / (double)grid_divisions_vertical);
-    for (size_t i = 0; i < (grid_divisions_vertical - 1); i++) {
-        size_t gl_y0_coord = vertical_division_height + (vertical_division_height * i);
-        size_t gl_y1_coord = gl_y0_coord;
-        for (size_t j = 0; j < current_width; j+=(grid_dot_width + 1)) {
-            glBegin(GL_LINE_STRIP);
-            size_t gl_x0_coord = j;
-            size_t gl_x1_coord = j+grid_dot_width;
-            glVertex2i(gl_x0_coord, gl_y0_coord);
-            glVertex2i(gl_x1_coord, gl_y1_coord);
-            glEnd();
-        }
-    }
+    glCallList(grid_index);
 }
 
 static void window_resize_callback(GLFWwindow* window, int width, int height) {
+    event_flag_resized = 1;
     current_width = width;
     current_height = height;
-    glViewport(0, 0, current_width, current_height);
+}
+
+static void resize(GLFWwindow* window, int width, int height) {
+    if (grid_index) {
+        glDeleteLists(grid_index, 1);
+    }
+    set_gl_view(current_width, current_height);
+    initialize_grid();
+}
+
+static void set_gl_view(int width, int height) {
+    glViewport(0, 0, width, height);
     glLoadIdentity();
-    glOrtho(0, current_width, 0, current_height, 0, 1);
-    update();
+    glOrtho(0, width, 0, height, 0, 1);
+}
+
+void static initialize_grid(void) {
+    size_t vertical_division_height = (int) round(current_height / (double)grid_divisions_vertical);
+    grid_index = glGenLists(1);
+    glNewList(grid_index, GL_COMPILE);
+        for (size_t i = 0; i < (grid_divisions_vertical - 1); i++) {
+            GLint y0 = vertical_division_height + (vertical_division_height * i);
+            GLint y1 = y0;
+            for (size_t j = 0; j < current_width; j += (grid_dot_width + grid_dot_stride)) {
+                glBegin(GL_LINE_STRIP);
+                    glVertex2i(j + 0, y0);
+                    glVertex2i(j + grid_dot_width, y1);
+                glEnd();
+            }
+        }
+    glEndList();
+}
+
+static void register_debugging_signal_handlers() {
+    signal(SIGABRT, crash_handler);
+    signal(SIGFPE, crash_handler);
+    signal(SIGILL, crash_handler);
+    signal(SIGINT, crash_handler);
+    signal(SIGSEGV, crash_handler);
+    signal(SIGTERM, crash_handler);
 }
 
 int main(void) {
+    register_debugging_signal_handlers();
     initialize();
     glfwSetErrorCallback(error_callback);
     glfwSetWindowSizeCallback(main_window, window_resize_callback);
     glfwSetFramebufferSizeCallback(main_window, window_resize_callback);
-    glfwSwapInterval(1);
     while (!glfwWindowShouldClose(main_window)) {
-        update();
+        if (event_flag_resized) {
+            resize(main_window, current_width, current_height);
+            event_flag_resized = 0;
+        }
+        redraw();
+        glfwPollEvents();
     }
     glfwTerminate();
     exit(EXIT_SUCCESS);
