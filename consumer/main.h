@@ -13,6 +13,7 @@ const char *default_window_title = "oscilloscope";
 const size_t max_window_width = 2048;
 const size_t default_window_width = 512;
 const size_t default_window_height = default_window_width;
+double display_zoom = 1.0;
 size_t current_width = default_window_width;
 size_t current_height = default_window_height;
 
@@ -28,6 +29,7 @@ int grid_index = 0;
 
 static void error_callback(int error, const char* description);
 static void register_debugging_signal_handlers();
+static void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods);
 static void initialize(void);
 static void initialize_grid(void);
 static void window_resize_callback(GLFWwindow* window, int width, int height);

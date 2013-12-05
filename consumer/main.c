@@ -15,6 +15,8 @@
 #include "thread_utils.h"
 
 #define EPSILON 0.0000001
+#define MAX(x, y) (((x) > (y)) ? (x) : (y))
+#define MIN(x, y) (((x) < (y)) ? (x) : (y))
 
 static void error_callback(int error, const char* description) {
     fputs(description, stderr);
@@ -29,6 +31,26 @@ static void crash_handler(int sig) {
   fprintf(stderr, "Error: signal %d:\n", sig);
   backtrace_symbols_fd(array, size, STDERR_FILENO);
   exit(1);
+}
+
+static void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods) {
+    if (action != GLFW_PRESS) {
+        return;
+    }
+    switch (key) {
+    case GLFW_KEY_UP:
+        display_zoom = MIN(display_zoom + 0.1, 3.9);
+        printf("zoom: %f\n", display_zoom);
+        update();
+        break;
+    case GLFW_KEY_DOWN:
+        display_zoom = MAX(display_zoom - 0.1, 0.1);
+        printf("zoom: %f\n", display_zoom);
+        update();
+        break;
+    default:
+        break;
+    }
 }
 
 static void initialize(void) {
@@ -61,6 +83,9 @@ static void redraw(void) {
 }
 
 static void draw_waveform(void) {
+    int n = MIN((int) round(current_width * display_zoom), sizeof_ring_buffer);
+    int m = current_width;
+
     while (pthread_mutex_trylock(samples_drawable_lock) != 0) {
         nanosecond_sleep();
     }
@@ -70,7 +95,8 @@ static void draw_waveform(void) {
 
     memset(samples_drawable, 0, sizeof(TYPE) * current_width);
     for(size_t i = 0; i < current_width; i++) {
-        TYPE sample = ring_buffer_get(ring_buffer, i);
+        int sample_offset = (int) round((i * n + m / 2.0) / m);
+        TYPE sample = ring_buffer_get(ring_buffer, sample_offset);
         samples_drawable[i] = sample;
     }
     pthread_mutex_unlock(ring_buffer->elements_lock);
@@ -159,6 +185,7 @@ int main(void) {
     glfwSetErrorCallback(error_callback);
     glfwSetWindowSizeCallback(main_window, window_resize_callback);
     glfwSetFramebufferSizeCallback(main_window, window_resize_callback);
+    glfwSetKeyCallback(main_window, key_callback);
     while (!glfwWindowShouldClose(main_window)) {
         if (event_flag_resized) {
             resize(main_window, current_width, current_height);
